@@ -19,9 +19,92 @@ function ProjectDetail({ projectId, onBack }: { projectId: string; onBack: () =>
   if (!project) return null
   const Icon = project.icon
 
-  // בדיקה האם יש לפרויקט מידע מורחב להציג
-  const hasExtendedData = project.problem || project.solution || (project.steps && project.steps.length > 0)
-  const hasVideo = PROJECTS_WITH_VIDEO.includes(projectId)
+  // מנוע רינדור הבלוקים הדינמי
+  const renderBlock = (block: any, index: number) => {
+    switch (block.type) {
+      case 'text':
+        return (
+          <section key={index} className="space-y-4">
+            {block.title && <h3 className="text-2xl font-semibold text-white">{block.title}</h3>}
+            <p className="leading-relaxed text-slate-400">{block.content}</p>
+          </section>
+        )
+      
+      case 'video':
+        return (
+          <section key={index} className="space-y-4">
+            {block.title && (
+              <h3 className="text-2xl font-semibold text-white flex items-center gap-2.5">
+                <Play className="size-5 text-[#00f0ff]" />
+                {block.title}
+              </h3>
+            )}
+            <div className="relative mx-auto aspect-[9/16] w-full max-w-[340px] overflow-hidden rounded-[2rem] border-[8px] border-white/5 bg-[#0b0b0f] shadow-[0_0_30px_rgba(0,240,255,0.08)]">
+              {videoLoaded ? (
+                <video controls playsInline preload="metadata" onError={() => setVideoLoaded(false)} className="h-full w-full object-cover">
+                  <source src={block.url} type="video/mp4" />
+                </video>
+              ) : (
+                <div className="flex h-full w-full flex-col items-center justify-center gap-3 p-6 text-center">
+                  <Play className="size-10 text-slate-600" />
+                  <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500">Video Unavailable</span>
+                </div>
+              )}
+            </div>
+          </section>
+        )
+
+      case 'steps':
+        return (
+          <section key={index} className="space-y-6">
+            {block.title && <h3 className="text-2xl font-semibold text-white">{block.title}</h3>}
+            <div className="flex flex-col gap-4">
+              {block.steps.map((step: any, i: number) => (
+                <div key={i} className="relative flex gap-5 rounded-xl border border-white/5 bg-white/[0.02] p-5">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#00f0ff]/10 font-mono text-sm font-bold text-[#00f0ff]">
+                    {String(i + 1).padStart(2, '0')}
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-white mb-2">{step.title}</h4>
+                    <p className="text-sm text-slate-400 leading-relaxed">{step.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )
+
+      case 'code':
+        return (
+          <section key={index} className="space-y-4 pt-6 border-t border-white/10">
+            <div className="flex flex-col gap-1">
+              {block.title && (
+                <h3 className="text-xl font-semibold text-white flex items-center gap-2">
+                  <CodeIcon className="size-5 text-[#00f0ff]" />
+                  {block.title}
+                </h3>
+              )}
+              {block.description && <p className="text-xs font-mono text-[#00f0ff] opacity-80">{block.description}</p>}
+            </div>
+            <div className="relative overflow-hidden rounded-xl border border-white/10 bg-[#070512] p-4 font-mono text-xs text-slate-300 shadow-inner">
+              <div className="mb-3 flex items-center justify-between border-b border-white/5 pb-2 text-[11px] text-slate-500">
+                <span>{block.language} snippet</span>
+                <span className="text-[#00f0ff]">{block.language}</span>
+              </div>
+              <pre className="overflow-x-auto whitespace-pre leading-relaxed">
+                <code>{block.code}</code>
+              </pre>
+            </div>
+          </section>
+        )
+
+      default:
+        return null;
+    }
+  }
+
+  // הפרדת הפיצ'רים כדי לשים אותם בסיידבר הצדדי כרגיל
+  const featuresBlock = project.contentBlocks.find(b => b.type === 'features')
 
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out pb-20">
@@ -51,150 +134,35 @@ function ProjectDetail({ projectId, onBack }: { projectId: string; onBack: () =>
         </div>
       </div>
 
-      {/* תמונת כותרת עליונה */}
+      {/* Hero Image */}
       <div className="relative mb-14 h-[420px] w-full overflow-hidden rounded-2xl border border-white/10 bg-[#0b0b0f] shadow-[0_0_50px_rgba(0,240,255,0.04)] flex items-center justify-center group">
-        <img
-          src={project.image || `/images/${project.id}.png`}
-          alt={project.title}
-          className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-          onError={(e) => {
-            e.currentTarget.style.display = 'none'
-            const fallback = document.getElementById(`fallback-${project.id}`)
-            if (fallback) fallback.style.display = 'flex'
-          }}
-        />
-
-        <div
-          id={`fallback-${project.id}`}
-          style={{ display: 'none' }}
-          className="flex-col items-center justify-center gap-4"
-        >
-          <div className="absolute inset-0 bg-[#00f0ff] opacity-0 transition-opacity duration-700 group-hover:opacity-[0.02]" />
-          <Icon className="size-16 text-[#00f0ff] opacity-40 transition-all duration-700 group-hover:scale-110 group-hover:opacity-100" />
-          <span className="font-mono text-xs uppercase tracking-widest text-slate-500">Visual Simulation Area</span>
-        </div>
+        <img src={project.image || `/images/${project.id}.png`} alt={project.title} className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" />
       </div>
 
-      {/* אזור תוכן דינמי */}
-      {hasExtendedData && (
-        <div className="grid gap-10 lg:grid-cols-3 border-t border-white/10 pt-12">
-          <div className="lg:col-span-2 space-y-12">
-            {project.problem && (
-              <section className="space-y-4">
-                <h3 className="text-2xl font-semibold text-white">
-                  {projectId === 'fsm' ? 'The Objective' : 'The Problem'}
-                </h3>
-                <p className="leading-relaxed text-slate-400">{project.problem}</p>
-              </section>
-            )}
-
-            {project.solution && (
-              <section className="space-y-4">
-                <h3 className="text-2xl font-semibold text-white">
-                  {projectId === 'fsm' ? 'The Implementation' : 'The Solution'}
-                </h3>
-                <p className="leading-relaxed text-slate-400">{project.solution}</p>
-              </section>
-            )}
-
-            {/* אזור נגן הסרטון - מוצג לכל פרויקט שמוגדר במערך PROJECTS_WITH_VIDEO */}
-            {hasVideo && (
-              <section className="space-y-4">
-                <h3 className="text-2xl font-semibold text-white flex items-center gap-2.5">
-                  <Play className="size-5 text-[#00f0ff]" />
-                  Demo &amp; Walkthrough
-                </h3>
-
-                <div className="relative mx-auto aspect-[9/16] w-full max-w-[340px] overflow-hidden rounded-[2rem] border-[8px] border-white/5 bg-[#0b0b0f] shadow-[0_0_30px_rgba(0,240,255,0.08)]">
-                  {videoLoaded ? (
-                    <video
-                      controls
-                      playsInline
-                      preload="metadata"
-                      onError={() => setVideoLoaded(false)}
-                      className="h-full w-full object-cover"
-                    >
-                      <source src={`/clips/${project.id}.mp4`} type="video/mp4" />
-                      הדפדפן שלך אינו תומך בהפעלת קובץ הווידאו.
-                    </video>
-                  ) : (
-                    <div className="flex h-full w-full flex-col items-center justify-center gap-3 p-6 text-center">
-                      <Play className="size-10 text-slate-600" />
-                      <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500">
-                        Video Demo Placeholder
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </section>
-            )}
-
-            {project.steps && project.steps.length > 0 && (
-              <section className="space-y-6">
-                <h3 className="text-2xl font-semibold text-white">How It Works</h3>
-                <div className="flex flex-col gap-4">
-                  {project.steps.map((step, index) => (
-                    <div
-                      key={index}
-                      className="relative flex gap-5 rounded-xl border border-white/5 bg-white/[0.02] p-5 transition-colors hover:bg-white/[0.04]"
-                    >
-                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#00f0ff]/10 font-mono text-sm font-bold text-[#00f0ff]">
-                        {String(index + 1).padStart(2, '0')}
-                      </div>
-                      <div>
-                        <h4 className="font-medium text-white mb-2">{step.title}</h4>
-                        <p className="text-sm text-slate-400 leading-relaxed">{step.description}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )}
-
-            {/* בלוק תצוגת הקוד של ארדואינו */}
-            {project.codeSnippet && (
-              <section className="space-y-4 pt-6 border-t border-white/10">
-                <div className="flex flex-col gap-1">
-                  <h3 className="text-xl font-semibold text-white flex items-center gap-2">
-                    <CodeIcon className="size-5 text-[#00f0ff]" />
-                    System Synchronization Code
-                  </h3>
-                  <p className="text-xs font-mono text-[#00f0ff] opacity-80">
-                    Using AI tools to generate the Arduino code that synchronizes the system
-                  </p>
-                </div>
-
-                <div className="relative overflow-hidden rounded-xl border border-white/10 bg-[#070512] p-4 font-mono text-xs text-slate-300 shadow-inner">
-                  <div className="mb-3 flex items-center justify-between border-b border-white/5 pb-2 text-[11px] text-slate-500">
-                    <span>clock_controller.ino</span>
-                    <span className="text-[#00f0ff]">C++ / Arduino</span>
-                  </div>
-                  <pre className="overflow-x-auto whitespace-pre leading-relaxed">
-                    <code>{project.codeSnippet}</code>
-                  </pre>
-                </div>
-              </section>
-            )}
-          </div>
-
-          {/* Key Features Sidebar */}
-          {project.features && project.features.length > 0 && (
-            <div className="space-y-6 lg:pl-6">
-              <div className="sticky top-24 rounded-2xl border border-white/10 bg-white/[0.02] p-6 shadow-xl">
-                <h4 className="mb-6 font-semibold text-white tracking-wide uppercase text-sm">Key Features</h4>
-                <ul className="space-y-4">
-                  {project.features.map((feature, i) => (
-                    <li key={i} className="flex items-start gap-3 text-sm text-slate-300">
-                      <span className="mt-1.5 size-1.5 rounded-full bg-[#00f0ff] shrink-0 shadow-[0_0_8px_rgba(0,240,255,0.8)]" />
-                      <span className="leading-snug">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          )}
+      {/* Dynamic Content Rendering */}
+      <div className="grid gap-10 lg:grid-cols-3 border-t border-white/10 pt-12">
+        <div className="lg:col-span-2 space-y-12">
+          {/* הריצה על הבלוקים */}
+          {project.contentBlocks.filter(b => b.type !== 'features').map((block, index) => renderBlock(block, index))}
         </div>
-      )}
+
+        {/* Key Features Sidebar */}
+        {featuresBlock && (
+          <div className="space-y-6 lg:pl-6">
+            <div className="sticky top-24 rounded-2xl border border-white/10 bg-white/[0.02] p-6 shadow-xl">
+              <h4 className="mb-6 font-semibold text-white tracking-wide uppercase text-sm">{featuresBlock.title || 'Key Features'}</h4>
+              <ul className="space-y-4">
+                {(featuresBlock as any).features.map((feature: string, i: number) => (
+                  <li key={i} className="flex items-start gap-3 text-sm text-slate-300">
+                    <span className="mt-1.5 size-1.5 rounded-full bg-[#00f0ff] shrink-0 shadow-[0_0_8px_rgba(0,240,255,0.8)]" />
+                    <span className="leading-snug">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   )
 }
@@ -246,8 +214,10 @@ export default function Page() {
         <main className="flex-1 px-6 py-12 sm:px-10 sm:py-14 lg:px-14 lg:py-16 max-w-7xl mx-auto w-full">
           {active === 'overview' && <OverviewSection />}
           {active === 'projects' && <ProjectsGrid onSelectProject={setActive} />}
-          {(active === 'hdl' || active === 'apple-pay-tracker' || active === 'fsm') && (
-            <ProjectDetail projectId={active} onBack={() => setActive('projects')} />
+          
+         {/* הוספנו את key={active} כדי לאפס את הדף בכל מעבר פרויקט */}
+          {projectCards.some(p => p.id === active) && (
+            <ProjectDetail key={active} projectId={active} onBack={() => setActive('projects')} />
           )}
           {active === 'resume' && <ResumeSection />}
         </main>
