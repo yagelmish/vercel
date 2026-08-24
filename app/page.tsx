@@ -28,8 +28,7 @@ function ProjectDetail({ projectId, onBack }: { projectId: string; onBack: () =>
         )
       
       {videoLoaded ? (
-                <video 
-                  key={block.url} /* <--- התיקון כאן! מכריח את React לטעון מחדש */
+                <video key={block.url} /* <--- התיקון כאן! מכריח את React לטעון מחדש */
                   controls 
                   playsInline 
                   preload="metadata" 
