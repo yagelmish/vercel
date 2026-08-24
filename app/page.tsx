@@ -9,12 +9,15 @@ import { ResumeSection } from '@/components/sections/resume-section'
 import { projectCards, type SectionId } from '@/lib/portfolio-data'
 import { cn } from '@/lib/utils'
 
+// --- רכיב דף הפרויקט המעודכן עם תוכן דינמי ---
 function ProjectDetail({ projectId, onBack }: { projectId: string, onBack: () => void }) {
+  const [imageLoaded, setImageLoaded] = useState(true)
   const [videoLoaded, setVideoLoaded] = useState(true)
   const project = projectCards.find(p => p.id === projectId)
   if (!project) return null
   const Icon = project.icon
 
+  // בדיקה האם יש לפרויקט מידע מורחב להציג
   const hasExtendedData = project.problem || project.solution || (project.steps && project.steps.length > 0)
 
   return (
@@ -27,6 +30,7 @@ function ProjectDetail({ projectId, onBack }: { projectId: string, onBack: () =>
       <div className="mb-12">
         <div className="mb-4 text-xs font-semibold tracking-widest text-[#00f0ff] uppercase">{project.label}</div>
         <h1 className="mb-6 text-4xl font-bold leading-tight tracking-tight text-white lg:text-5xl">{project.title}</h1>
+        {/* שימוש ב-pageDescription אם קיים, אחרת מציג את התיאור הרגיל */}
         <p className="mb-8 text-lg leading-relaxed text-slate-300 max-w-3xl">
           {project.pageDescription || project.description}
         </p>
@@ -63,7 +67,7 @@ function ProjectDetail({ projectId, onBack }: { projectId: string, onBack: () =>
         </div>
       </div>
 
-      {/* אזור תוכן דינמי */}
+      {/* אזור תוכן דינמי (יופיע רק אם מילאת נתונים בקובץ portfolio-data) */}
       {hasExtendedData && (
         <div className="grid gap-10 lg:grid-cols-3 border-t border-white/10 pt-12">
           <div className="lg:col-span-2 space-y-12">
@@ -86,7 +90,7 @@ function ProjectDetail({ projectId, onBack }: { projectId: string, onBack: () =>
               </section>
             )}
 
-            {/* אזור נגן הסרטון לאורך */}
+            {/* אזור נגן הסרטון */}
             <section className="space-y-4">
               <h3 className="text-2xl font-semibold text-white flex items-center gap-2.5">
                 <Play className="size-5 text-[#00f0ff]" />
@@ -108,7 +112,7 @@ function ProjectDetail({ projectId, onBack }: { projectId: string, onBack: () =>
                 ) : (
                   <div className="flex h-full w-full flex-col items-center justify-center gap-3 p-6 text-center">
                     <Play className="size-10 text-slate-600" />
-                    <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500">
+                    <span className="font-mono text-xs uppercase tracking-widest text-slate-500">
                       Video Demo Placeholder
                       <br/>
                       (/clips/{project.id}.mp4)
@@ -118,7 +122,6 @@ function ProjectDetail({ projectId, onBack }: { projectId: string, onBack: () =>
               </div>
             </section>
 
-            {/* שלבי How It Works */}
             {project.steps && project.steps.length > 0 && (
               <section className="space-y-6">
                 <h3 className="text-2xl font-semibold text-white">How It Works</h3>
@@ -138,7 +141,7 @@ function ProjectDetail({ projectId, onBack }: { projectId: string, onBack: () =>
               </section>
             )}
 
-            {/* בלוק תצוגת קוד */}
+            {/* בלוק תצוגת הקוד של ארדואינו */}
             {project.codeSnippet && (
               <section className="space-y-4 pt-6 border-t border-white/10">
                 <div className="flex flex-col gap-1">
@@ -156,7 +159,7 @@ function ProjectDetail({ projectId, onBack }: { projectId: string, onBack: () =>
                     <span>clock_controller.ino</span>
                     <span className="text-[#00f0ff]">C++ / Arduino</span>
                   </div>
-                  <pre className="overflow-x-auto whitespace-pre leading-relaxed font-mono">
+                  <pre className="overflow-x-auto whitespace-pre leading-relaxed">
                     <code>{project.codeSnippet}</code>
                   </pre>
                 </div>
@@ -164,7 +167,7 @@ function ProjectDetail({ projectId, onBack }: { projectId: string, onBack: () =>
             )}
           </div>
 
-          {/* Key Features */}
+          {/* Key Features Sidebar */}
           {project.features && project.features.length > 0 && (
             <div className="space-y-6 lg:pl-6">
               <div className="sticky top-24 rounded-2xl border border-white/10 bg-white/[0.02] p-6 shadow-xl">
