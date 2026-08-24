@@ -131,7 +131,7 @@ export const projectCards: Project[] = [
     tags: ['ARDUINO', 'FSM', 'EMBEDDED C', 'HARDWARE'],
     icon: Lock,
     glyph: 'FSM · I/O · LOGIC',
-    image: '/images/fsm/fsm.jpeg', 
+    image: '/images/Fsm/fsm.jpeg', 
     contentBlocks: [
       {
         type: 'text',
@@ -146,7 +146,7 @@ export const projectCards: Project[] = [
       {
         type: 'video',
         title: 'Demo & Walkthrough',
-        url: '/clips/fsm/fsm.mp4'
+        url: '/clips/Fsm/fsm.mp4'
       },
       {
         type: 'steps',
