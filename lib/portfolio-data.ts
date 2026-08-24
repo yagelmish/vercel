@@ -13,15 +13,16 @@ export type ProjectCard = {
   label: string
   title: string
   description: string
+  pageDescription?: string
   tags: string[]
   icon: LucideIcon
   glyph: string
   image?: string
-  // שדות דינמיים חדשים לתוכן המפורט
   problem?: string
   solution?: string
   features?: string[]
   steps?: ProjectStep[]
+  codeSnippet?: string
 }
 
 export const projectCards: ProjectCard[] = [
@@ -36,12 +37,14 @@ export const projectCards: ProjectCard[] = [
     icon: Cpu,
     glyph: 'ALU · REG · MUX',
     image: '/images/hdl.png',
-    problem: 'Here you can describe the main challenge or objective of building a CPU from scratch.',
-    solution: 'Describe your approach, the architecture you chose, and how you solved the problem.',
-    features: ['ALU Design', 'Memory Hierarchy', 'Instruction Set', 'Logic Gates'],
+    problem: 'To construct a general-purpose 16-bit computer architecture from the ground up starting from primitive NAND logic gates.',
+    solution: 'Designed and simulated combinational and sequential chips in HDL, implemented an ALU, register files, and program counter, and integrated them into a functional CPU capable of executing machine language binaries.',
+    features: ['Custom 16-bit ALU', 'Memory Hierarchy & RAM', 'Fetch-Decode-Execute CPU', 'Assembly Compatibility'],
     steps: [
-      { title: 'Step 1: Logic Gates', description: 'Built basic NAND/NOR gates...' },
-      { title: 'Step 2: ALU', description: 'Assembled the Arithmetic Logic Unit...' }
+      { title: 'Elementary Logic Gates', description: 'Constructed basic Boolean logic gates (AND, OR, XOR, Mux, DMux) solely from elementary NAND gates.' },
+      { title: 'Combinational & ALU Logic', description: 'Built multibit adders, incrementors, and the core Arithmetic Logic Unit (ALU).' },
+      { title: 'Sequential Logic & Memory', description: 'Implemented D Flip-Flop registers, RAM hierarchies, and the Program Counter (PC).' },
+      { title: 'CPU & System Integration', description: 'Combined memory, ALU, and instruction registers into a unified synchronous CPU architecture.' }
     ]
   },
   {
@@ -77,17 +80,42 @@ export const projectCards: ProjectCard[] = [
     label: 'EMBEDDED LOGIC',
     title: 'Digital Safe Lock: FSM Implementation',
     description:
-      'An embedded hardware project demonstrating a Finite State Machine (FSM) utilizing an Arduino microcontroller. The system simulates a secure digital safe that processes sequential user inputs, transitioning through strictly defined logical states to validate a passcode before triggering the unlock mechanism. Written entirely in C.',
-    tags: ['ARDUINO', 'FSM', 'EMBEDDED C'],
+      'Hardware-focused FSM architecture demonstrating discrete input processing, signal conditioning, and deterministic state transitions in embedded C with minimal MCU software overhead.',
+    pageDescription:
+      'A hardware-centric Finite State Machine (FSM) implementation designed to demonstrate low-level digital control logic with minimal software dependency. Built around an Arduino platform, the system relies on hardware debouncing, structured GPIO signal handling, and a strict deterministic state transition model written in low-level C to manage input validation and access control.',
+    tags: ['ARDUINO', 'FSM', 'EMBEDDED C', 'HARDWARE'],
     icon: Lock,
-    glyph: 'FSM · I/O · LOGIC',
+    glyph: 'CLK · D-FF · LOGIC',
     image: '/images/fsm.jpeg', 
-    problem: 'Describe the issue or the academic requirement for building a secure FSM lock.',
-    solution: 'Explain how you used states and C programming on Arduino to manage the inputs safely.',
-    features: ['State Machine Logic', 'Debouncing', 'Hardware Interfacing', 'C Programming'],
+    problem: 'Gaining hands-on experience in building a physical, discrete digital circuit from the ground up on a breadboard. The project focused on working directly with fundamental building blocks—combining discrete logic gates with D Flip-Flops for state storage, alongside developing formal state tables and deriving excitation equations to implement a synchronous Finite State Machine without relying on microcontroller software execution.',
+    solution: 'The physical circuit was implemented using discrete logic ICs and D Flip-Flop registers to handle state memory and Next-State gating. An Arduino microcontroller was utilized exclusively as a stable 5V power supply and an edge-controlled clock generator. Instead of a free-running oscillator, the Arduino generated deterministic clock pulses triggered by user keypad inputs—introducing a calculated delay to ensure input signals and setup times fully stabilize at the D Flip-Flop inputs before pulsing the clock, preventing metastability and ensuring reliable state transitions.',
+    features: ['Discrete State Memory', 'Hardware Logic Gating', 'Signal Stabilization', 'Metastability Prevention'],
     steps: [
-      { title: 'Input Reading', description: 'Explain how buttons or inputs are read...' },
-      { title: 'State Transition', description: 'Explain how the FSM moves from state to state...' }
-    ]
+      { title: 'Binary Input Reception', description: 'The FSM system receives a 0/1 input directly from the user via the input buttons.' },
+      { title: 'Controlled Clock Pulse', description: 'Following the input keystroke, a precise and synchronized clock pulse is generated by the Arduino controller.' },
+      { title: 'Hardware Logic Execution', description: 'Based on the previous state and the derived excitation equations, the signal propagates entirely through the hardware.' },
+      { title: 'Unlock Validation', description: 'Upon reaching the correct final state, the indicator light illuminates to signal the safe is unlocked.' }
+    ],
+    codeSnippet: `// Replace this with your actual Arduino code
+const int buttonPin = 2;
+const int clockPin = 13;
+
+void setup() {
+  pinMode(buttonPin, INPUT_PULLUP);
+  pinMode(clockPin, OUTPUT);
+  digitalWrite(clockPin, LOW);
+}
+
+void loop() {
+  if (digitalRead(buttonPin) == LOW) {
+    delay(50); // Signal stabilization & debouncing
+    digitalWrite(clockPin, HIGH); // Clock rising edge
+    delay(10);
+    digitalWrite(clockPin, LOW); // Clock falling edge
+    
+    while(digitalRead(buttonPin) == LOW); // Wait for release
+    delay(50);
+  }
+}`
   },
 ]
