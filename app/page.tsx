@@ -27,19 +27,17 @@ function ProjectDetail({ projectId, onBack }: { projectId: string; onBack: () =>
           </section>
         )
       
-      case 'video':
-        return (
-          <section key={index} className="space-y-4">
-            {block.title && (
-              <h3 className="text-2xl font-semibold text-white flex items-center gap-2.5">
-                <Play className="size-5 text-[#00f0ff]" />
-                {block.title}
-              </h3>
-            )}
-            <div className="relative mx-auto aspect-[9/16] w-full max-w-[340px] overflow-hidden rounded-[2rem] border-[8px] border-white/5 bg-[#0b0b0f] shadow-[0_0_30px_rgba(0,240,255,0.08)]">
-              {videoLoaded ? (
-                <video controls playsInline preload="metadata" onError={() => setVideoLoaded(false)} className="h-full w-full object-cover">
+      {videoLoaded ? (
+                <video 
+                  key={block.url} /* <--- התיקון כאן! מכריח את React לטעון מחדש */
+                  controls 
+                  playsInline 
+                  preload="metadata" 
+                  onError={() => setVideoLoaded(false)} 
+                  className="h-full w-full object-cover"
+                >
                   <source src={block.url} type="video/mp4" />
+                  הדפדפן שלך אינו תומך בהפעלת קובץ הווידאו.
                 </video>
               ) : (
                 <div className="flex h-full w-full flex-col items-center justify-center gap-3 p-6 text-center">
@@ -47,10 +45,7 @@ function ProjectDetail({ projectId, onBack }: { projectId: string; onBack: () =>
                   <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500">Video Unavailable</span>
                 </div>
               )}
-            </div>
-          </section>
-        )
-
+        
       case 'steps':
         return (
           <section key={index} className="space-y-6">
