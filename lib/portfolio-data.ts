@@ -77,7 +77,7 @@ export const projectCards: Project[] = [
     tags: ['IOS SHORTCUTS', 'MAKE', 'GOOGLE SHEETS API'],
     icon: Code,
     glyph: 'AUTOMATION · API · SHEETS',
-    image: '/images/apple-pay-tracker.png',
+    image: '/images/pay/apple-pay-tracker.png',
     contentBlocks: [
       {
         type: 'text',
@@ -92,7 +92,7 @@ export const projectCards: Project[] = [
       {
         type: 'video',
         title: 'Demo & Walkthrough',
-        url: '/clips/apple-pay-tracker.mp4'
+        url: '/clips/pay/apple-pay-tracker.mp4'
       },
       {
         type: 'steps',
@@ -129,7 +129,7 @@ export const projectCards: Project[] = [
     tags: ['ARDUINO', 'FSM', 'EMBEDDED C', 'HARDWARE'],
     icon: Lock,
     glyph: 'FSM · I/O · LOGIC',
-    image: '/images/fsm.jpeg', 
+    image: '/images/fsm/fsm.jpeg', 
     contentBlocks: [
       {
         type: 'text',
@@ -144,7 +144,7 @@ export const projectCards: Project[] = [
       {
         type: 'video',
         title: 'Demo & Walkthrough',
-        url: '/clips/fsm.mp4'
+        url: '/clips/fsm/fsm.mp4'
       },
       {
         type: 'steps',
