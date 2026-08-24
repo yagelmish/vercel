@@ -1,3 +1,5 @@
+//הערת בדיקה
+
 import { Cpu, Code, Lock, type LucideIcon } from 'lucide-react'
 
 export type SectionId = 'overview' | 'projects' | 'resume' | (string & {});
