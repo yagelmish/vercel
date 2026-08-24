@@ -26,7 +26,8 @@ export interface Project {
   codeSnippet?: string;
 }
 
-export const projectCards: ProjectCard[] = [
+// שינינו כאן ל-Project[] כדי להתאים לממשק
+export const projectCards: Project[] = [
   {
     id: 'hdl',
     category: 'hardware',
@@ -57,6 +58,7 @@ export const projectCards: ProjectCard[] = [
     icon: Code,
     glyph: 'AUTOMATION · API · SHEETS',
     image: '/images/apple-pay-tracker.png',
+    hasVideo: true, // <--- הוספנו את ההגדרה לסרטון
     problem: 'Manual expense tracking is tedious and prone to human error. Keeping a budget usually requires saving receipts or manually entering every purchase into an app at the end of the day, which often leads to missing data and abandoned tracking habits.',
     solution: 'I built a completely seamless automation that runs entirely in the background. Every time a transaction is made using Apple Pay, the system automatically captures the vendor, amount, and date, categorizes the expense, and logs it directly into a tracking sheet.',
     features: [
@@ -86,6 +88,7 @@ export const projectCards: ProjectCard[] = [
     icon: Lock,
     glyph: 'FSM · I/O · LOGIC',
     image: '/images/fsm.jpeg', 
+    hasVideo: true, // <--- הוספנו את ההגדרה לסרטון
     problem: 'Gaining hands-on experience in building a physical, discrete digital circuit from the ground up on a breadboard. The project focused on working directly with fundamental building blocks—combining discrete logic gates with D Flip-Flops for state storage, alongside developing formal state tables and deriving excitation equations to implement a synchronous Finite State Machine without relying on microcontroller software execution.',
     solution: 'The physical circuit was implemented using discrete logic ICs and D Flip-Flop registers to handle state memory and Next-State gating. An Arduino microcontroller was utilized exclusively as a stable 5V power supply and an edge-controlled clock generator. Instead of a free-running oscillator, the Arduino generated deterministic clock pulses triggered by user keypad inputs—introducing a calculated delay to ensure input signals and setup times fully stabilize at the D Flip-Flop inputs before pulsing the clock, preventing metastability and ensuring reliable state transitions.',
     features: ['Discrete State Memory', 'Hardware Logic Gating', 'Signal Stabilization', 'Metastability Prevention'],
