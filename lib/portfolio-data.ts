@@ -1,28 +1,29 @@
 import { Cpu, Code, Lock, type LucideIcon } from 'lucide-react'
 
-export type SectionId = 'overview' | 'projects' | 'resume' | 'hdl' | 'apple-pay-tracker' | 'fsm'
+// 1. הפוך את SectionId לדינמי כדי שיקבל כל מחרוזת (מזהה פרויקט)
+export type SectionId = 'overview' | 'projects' | 'resume' | (string & {});
 
 export type ProjectStep = {
   title: string
   description: string
 }
 
-export type ProjectCard = {
-  id: string
-  category: 'software' | 'hardware' | 'learning'
-  label: string
-  title: string
-  description: string
-  pageDescription?: string // שדה חדש לתיאור המורחב בתוך דף הפרויקט
-  tags: string[]
-  icon: LucideIcon
-  glyph: string
-  image?: string
-  problem?: string
-  solution?: string
-  features?: string[]
-  steps?: ProjectStep[]
-  codeSnippet?: string // שדה חדש לקוד
+// 2. הוסף hasVideo לממשק (Interface)
+export interface Project {
+  id: string;
+  title: string;
+  label: string;
+  description: string;
+  pageDescription?: string;
+  tags: string[];
+  image?: string;
+  icon: any;
+  problem?: string;
+  solution?: string;
+  features?: string[];
+  hasVideo?: boolean; // הוספנו את השורה הזו
+  steps?: { title: string; description: string }[];
+  codeSnippet?: string;
 }
 
 export const projectCards: ProjectCard[] = [
