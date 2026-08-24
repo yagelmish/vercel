@@ -131,7 +131,7 @@ export const projectCards: Project[] = [
     tags: ['ARDUINO', 'FSM', 'EMBEDDED C', 'HARDWARE'],
     icon: Lock,
     glyph: 'FSM · I/O · LOGIC',
-    image: '/images/fsm/fsm.jpeg', 
+    image: '/images/fsm/fsm.png', 
     contentBlocks: [
       {
         type: 'text',
