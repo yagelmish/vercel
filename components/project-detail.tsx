@@ -44,6 +44,21 @@ export function ProjectDetail({ projectId, onBack }: { projectId: string; onBack
           </section>
         )
 
+        case 'image':
+        return (
+          <section key={index} className="space-y-4">
+            {block.title && <h3 className="text-2xl font-semibold text-white">{block.title}</h3>}
+            <div className="relative w-full overflow-hidden rounded-2xl border border-white/10 bg-[#0b0b0f] shadow-[0_0_30px_rgba(0,240,255,0.04)]">
+              {/* נוסיף את התמונה עצמה */}
+              <img 
+                src={block.url} 
+                alt={block.alt || block.title || 'Project visual'} 
+                className="w-full h-auto object-cover"
+              />
+            </div>
+          </section>
+        )
+
       case 'steps':
         return (
           <section key={index} className="space-y-6">
