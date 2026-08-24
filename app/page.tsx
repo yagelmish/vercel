@@ -9,8 +9,6 @@ import { ResumeSection } from '@/components/sections/resume-section'
 import { projectCards, type SectionId } from '@/lib/portfolio-data'
 import { cn } from '@/lib/utils'
 
-// רשימת מזהי הפרויקטים שקיים עבורם קובץ וידאו בתיקיית public/clips
-const PROJECTS_WITH_VIDEO = ['fsm', 'apple-pay-tracker', 'hdl']
 
 // --- רכיב דף הפרויקט המעודכן עם תוכן דינמי ---
 function ProjectDetail({ projectId, onBack }: { projectId: string; onBack: () => void }) {
