@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Menu, ArrowLeft, Play } from 'lucide-react'
+import { Menu, ArrowLeft, Play, Code as CodeIcon } from 'lucide-react'
 import { Sidebar } from '@/components/sidebar'
 import { OverviewSection } from '@/components/sections/overview-section'
 import { ProjectsGrid } from '@/components/sections/projects-grid'
@@ -9,15 +9,12 @@ import { ResumeSection } from '@/components/sections/resume-section'
 import { projectCards, type SectionId } from '@/lib/portfolio-data'
 import { cn } from '@/lib/utils'
 
-// --- רכיב דף הפרויקט המעודכן עם תוכן דינמי ---
 function ProjectDetail({ projectId, onBack }: { projectId: string, onBack: () => void }) {
-  const [imageLoaded, setImageLoaded] = useState(true)
   const [videoLoaded, setVideoLoaded] = useState(true)
   const project = projectCards.find(p => p.id === projectId)
   if (!project) return null
   const Icon = project.icon
 
-  // בדיקה האם יש לפרויקט מידע מורחב להציג
   const hasExtendedData = project.problem || project.solution || (project.steps && project.steps.length > 0)
 
   return (
@@ -30,7 +27,9 @@ function ProjectDetail({ projectId, onBack }: { projectId: string, onBack: () =>
       <div className="mb-12">
         <div className="mb-4 text-xs font-semibold tracking-widest text-[#00f0ff] uppercase">{project.label}</div>
         <h1 className="mb-6 text-4xl font-bold leading-tight tracking-tight text-white lg:text-5xl">{project.title}</h1>
-        <p className="mb-8 text-lg leading-relaxed text-slate-300 max-w-3xl">{project.description}</p>
+        <p className="mb-8 text-lg leading-relaxed text-slate-300 max-w-3xl">
+          {project.pageDescription || project.description}
+        </p>
         <div className="flex flex-wrap gap-3">
           {project.tags.map(tag => (
             <span key={tag} className="rounded-full border border-[#00f0ff]/40 bg-[#00f0ff]/10 px-4 py-1.5 text-xs font-semibold tracking-wider text-[#00f0ff] uppercase">
@@ -64,33 +63,37 @@ function ProjectDetail({ projectId, onBack }: { projectId: string, onBack: () =>
         </div>
       </div>
 
-      {/* אזור תוכן דינמי (יופיע רק אם מילאת נתונים בקובץ portfolio-data) */}
+      {/* אזור תוכן דינמי */}
       {hasExtendedData && (
         <div className="grid gap-10 lg:grid-cols-3 border-t border-white/10 pt-12">
           <div className="lg:col-span-2 space-y-12">
 
             {project.problem && (
               <section className="space-y-4">
-                <h3 className="text-2xl font-semibold text-white">The Problem</h3>
+                <h3 className="text-2xl font-semibold text-white">
+                  {projectId === 'fsm' ? 'The Objective' : 'The Problem'}
+                </h3>
                 <p className="leading-relaxed text-slate-400">{project.problem}</p>
               </section>
             )}
 
             {project.solution && (
               <section className="space-y-4">
-                <h3 className="text-2xl font-semibold text-white">The Solution</h3>
+                <h3 className="text-2xl font-semibold text-white">
+                  {projectId === 'fsm' ? 'The Implementation' : 'The Solution'}
+                </h3>
                 <p className="leading-relaxed text-slate-400">{project.solution}</p>
               </section>
             )}
 
-            {/* אזור נגן הסרטון - יחפש תמיד קובץ לפי ה-ID בתיקיית clips */}
+            {/* אזור נגן הסרטון לאורך */}
             <section className="space-y-4">
               <h3 className="text-2xl font-semibold text-white flex items-center gap-2.5">
                 <Play className="size-5 text-[#00f0ff]" />
                 Demo &amp; Walkthrough
               </h3>
 
-              <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-white/10 bg-[#0b0b0f] shadow-[0_0_30px_rgba(0,240,255,0.05)]">
+              <div className="relative mx-auto aspect-[9/16] w-full max-w-[340px] overflow-hidden rounded-[2rem] border-[8px] border-white/5 bg-[#0b0b0f] shadow-[0_0_30px_rgba(0,240,255,0.08)]">
                 {videoLoaded ? (
                   <video
                     controls
@@ -105,14 +108,17 @@ function ProjectDetail({ projectId, onBack }: { projectId: string, onBack: () =>
                 ) : (
                   <div className="flex h-full w-full flex-col items-center justify-center gap-3 p-6 text-center">
                     <Play className="size-10 text-slate-600" />
-                    <span className="font-mono text-xs uppercase tracking-widest text-slate-500">
-                      Video Demo Placeholder (/clips/{project.id}.mp4)
+                    <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500">
+                      Video Demo Placeholder
+                      <br/>
+                      (/clips/{project.id}.mp4)
                     </span>
                   </div>
                 )}
               </div>
             </section>
 
+            {/* שלבי How It Works */}
             {project.steps && project.steps.length > 0 && (
               <section className="space-y-6">
                 <h3 className="text-2xl font-semibold text-white">How It Works</h3>
@@ -131,9 +137,34 @@ function ProjectDetail({ projectId, onBack }: { projectId: string, onBack: () =>
                 </div>
               </section>
             )}
+
+            {/* בלוק תצוגת קוד */}
+            {project.codeSnippet && (
+              <section className="space-y-4 pt-6 border-t border-white/10">
+                <div className="flex flex-col gap-1">
+                  <h3 className="text-xl font-semibold text-white flex items-center gap-2">
+                    <CodeIcon className="size-5 text-[#00f0ff]" />
+                    System Synchronization Code
+                  </h3>
+                  <p className="text-xs font-mono text-[#00f0ff] opacity-80">
+                    Using AI tools to generate the Arduino code that synchronizes the system
+                  </p>
+                </div>
+
+                <div className="relative overflow-hidden rounded-xl border border-white/10 bg-[#070512] p-4 font-mono text-xs text-slate-300 shadow-inner">
+                  <div className="mb-3 flex items-center justify-between border-b border-white/5 pb-2 text-[11px] text-slate-500">
+                    <span>clock_controller.ino</span>
+                    <span className="text-[#00f0ff]">C++ / Arduino</span>
+                  </div>
+                  <pre className="overflow-x-auto whitespace-pre leading-relaxed font-mono">
+                    <code>{project.codeSnippet}</code>
+                  </pre>
+                </div>
+              </section>
+            )}
           </div>
 
-          {/* Key Features Sidebar */}
+          {/* Key Features */}
           {project.features && project.features.length > 0 && (
             <div className="space-y-6 lg:pl-6">
               <div className="sticky top-24 rounded-2xl border border-white/10 bg-white/[0.02] p-6 shadow-xl">
