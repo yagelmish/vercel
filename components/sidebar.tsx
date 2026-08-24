@@ -22,7 +22,7 @@ type NavProps = {
 }
 
 export function Sidebar({ active, onSelect, onCloseMobile }: NavProps) {
-  const isProjectActive = ['projects', 'hdl', 'apple-pay-tracker', 'fsm'].includes(active)
+const isProjectActive = active === 'projects' || projectCards.some(p => p.id === active)
   const [projectsOpen, setProjectsOpen] = useState(isProjectActive)
   
   // פתיחת קטגוריות נפרדות
