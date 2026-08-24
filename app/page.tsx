@@ -9,9 +9,11 @@ import { ResumeSection } from '@/components/sections/resume-section'
 import { projectCards, type SectionId } from '@/lib/portfolio-data'
 import { cn } from '@/lib/utils'
 
+// רשימת מזהי הפרויקטים שקיים עבורם קובץ וידאו בתיקיית public/clips
+const PROJECTS_WITH_VIDEO = ['fsm', 'apple-pay-tracker', 'hdl']
+
 // --- רכיב דף הפרויקט המעודכן עם תוכן דינמי ---
-function ProjectDetail({ projectId, onBack }: { projectId: string, onBack: () => void }) {
-  const [imageLoaded, setImageLoaded] = useState(true)
+function ProjectDetail({ projectId, onBack }: { projectId: string; onBack: () => void }) {
   const [videoLoaded, setVideoLoaded] = useState(true)
   const project = projectCards.find(p => p.id === projectId)
   if (!project) return null
@@ -19,10 +21,14 @@ function ProjectDetail({ projectId, onBack }: { projectId: string, onBack: () =>
 
   // בדיקה האם יש לפרויקט מידע מורחב להציג
   const hasExtendedData = project.problem || project.solution || (project.steps && project.steps.length > 0)
+  const hasVideo = PROJECTS_WITH_VIDEO.includes(projectId)
 
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out pb-20">
-      <button onClick={onBack} className="mb-12 flex items-center gap-2 text-sm font-semibold tracking-wider text-[#00f0ff] transition-colors hover:text-white uppercase">
+      <button
+        onClick={onBack}
+        className="mb-12 flex items-center gap-2 text-sm font-semibold tracking-wider text-[#00f0ff] transition-colors hover:text-white uppercase"
+      >
         <ArrowLeft className="size-4" /> Return_To_Index
       </button>
 
@@ -30,13 +36,15 @@ function ProjectDetail({ projectId, onBack }: { projectId: string, onBack: () =>
       <div className="mb-12">
         <div className="mb-4 text-xs font-semibold tracking-widest text-[#00f0ff] uppercase">{project.label}</div>
         <h1 className="mb-6 text-4xl font-bold leading-tight tracking-tight text-white lg:text-5xl">{project.title}</h1>
-        {/* שימוש ב-pageDescription אם קיים, אחרת מציג את התיאור הרגיל */}
         <p className="mb-8 text-lg leading-relaxed text-slate-300 max-w-3xl">
           {project.pageDescription || project.description}
         </p>
         <div className="flex flex-wrap gap-3">
           {project.tags.map(tag => (
-            <span key={tag} className="rounded-full border border-[#00f0ff]/40 bg-[#00f0ff]/10 px-4 py-1.5 text-xs font-semibold tracking-wider text-[#00f0ff] uppercase">
+            <span
+              key={tag}
+              className="rounded-full border border-[#00f0ff]/40 bg-[#00f0ff]/10 px-4 py-1.5 text-xs font-semibold tracking-wider text-[#00f0ff] uppercase"
+            >
               {tag}
             </span>
           ))}
@@ -67,11 +75,10 @@ function ProjectDetail({ projectId, onBack }: { projectId: string, onBack: () =>
         </div>
       </div>
 
-      {/* אזור תוכן דינמי (יופיע רק אם מילאת נתונים בקובץ portfolio-data) */}
+      {/* אזור תוכן דינמי */}
       {hasExtendedData && (
         <div className="grid gap-10 lg:grid-cols-3 border-t border-white/10 pt-12">
           <div className="lg:col-span-2 space-y-12">
-
             {project.problem && (
               <section className="space-y-4">
                 <h3 className="text-2xl font-semibold text-white">
@@ -89,8 +96,9 @@ function ProjectDetail({ projectId, onBack }: { projectId: string, onBack: () =>
                 <p className="leading-relaxed text-slate-400">{project.solution}</p>
               </section>
             )}
-{/* אזור נגן הסרטון לאורך - מוצג רק אם קיים סרטון לפרויקט */}
-            {projectId === 'fsm' && (
+
+            {/* אזור נגן הסרטון - מוצג לכל פרויקט שמוגדר במערך PROJECTS_WITH_VIDEO */}
+            {hasVideo && (
               <section className="space-y-4">
                 <h3 className="text-2xl font-semibold text-white flex items-center gap-2.5">
                   <Play className="size-5 text-[#00f0ff]" />
@@ -120,12 +128,16 @@ function ProjectDetail({ projectId, onBack }: { projectId: string, onBack: () =>
                 </div>
               </section>
             )}
+
             {project.steps && project.steps.length > 0 && (
               <section className="space-y-6">
                 <h3 className="text-2xl font-semibold text-white">How It Works</h3>
                 <div className="flex flex-col gap-4">
                   {project.steps.map((step, index) => (
-                    <div key={index} className="relative flex gap-5 rounded-xl border border-white/5 bg-white/[0.02] p-5 transition-colors hover:bg-white/[0.04]">
+                    <div
+                      key={index}
+                      className="relative flex gap-5 rounded-xl border border-white/5 bg-white/[0.02] p-5 transition-colors hover:bg-white/[0.04]"
+                    >
                       <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#00f0ff]/10 font-mono text-sm font-bold text-[#00f0ff]">
                         {String(index + 1).padStart(2, '0')}
                       </div>
@@ -205,10 +217,19 @@ export default function Page() {
       </aside>
 
       {mobileOpen && (
-        <div className="fixed inset-0 z-40 bg-[#030108]/80 backdrop-blur-md md:hidden" onClick={() => setMobileOpen(false)} aria-hidden="true" />
+        <div
+          className="fixed inset-0 z-40 bg-[#030108]/80 backdrop-blur-md md:hidden"
+          onClick={() => setMobileOpen(false)}
+          aria-hidden="true"
+        />
       )}
 
-      <aside className={cn('fixed inset-y-0 left-0 z-50 w-72 border-r border-purple-500/20 bg-[#0a0518]/95 shadow-[8px_0_30px_rgba(139,92,246,0.1)] backdrop-blur-3xl transition-transform duration-300 md:hidden', mobileOpen ? 'translate-x-0' : '-translate-x-full')}>
+      <aside
+        className={cn(
+          'fixed inset-y-0 left-0 z-50 w-72 border-r border-purple-500/20 bg-[#0a0518]/95 shadow-[8px_0_30px_rgba(139,92,246,0.1)] backdrop-blur-3xl transition-transform duration-300 md:hidden',
+          mobileOpen ? 'translate-x-0' : '-translate-x-full'
+        )}
+      >
         <Sidebar active={active} onSelect={setActive} onCloseMobile={() => setMobileOpen(false)} />
       </aside>
 
