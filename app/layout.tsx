@@ -10,7 +10,7 @@ export const metadata = {
   title: 'Yagel Mishalov | Portfolio',
   description: 'Hardware & Software Engineering Portfolio',
   icons: {
-    icon: '/favicon.ico', 
+    icon: '/icon.svg', 
   },
 }
 
