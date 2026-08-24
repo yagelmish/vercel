@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { ArrowLeft, Play, Code as CodeIcon } from 'lucide-react'
-import { projectCards } from '@/lib/portfolio-data'
+import { projectCards, Project, ContentBlock, StepsBlock, CodeBlock, VideoBlock, TextBlock } from '@/lib/portfolio-data'
 
 export function ProjectDetail({ projectId, onBack }: { projectId: string; onBack: () => void }) {
   const [videoLoaded, setVideoLoaded] = useState(true)
@@ -10,8 +10,8 @@ export function ProjectDetail({ projectId, onBack }: { projectId: string; onBack
   if (!project) return null
   const Icon = project.icon
 
-  // מנוע רינדור הבלוקים הדינמי
-  const renderBlock = (block: any, index: number) => {
+  // מנוע רינדור הבלוקים הדינמי - ללא any
+  const renderBlock = (block: ContentBlock, index: number) => {
     switch (block.type) {
       case 'text':
         return (
@@ -50,7 +50,7 @@ export function ProjectDetail({ projectId, onBack }: { projectId: string; onBack
           <section key={index} className="space-y-6">
             {block.title && <h3 className="text-2xl font-semibold text-white">{block.title}</h3>}
             <div className="flex flex-col gap-4">
-              {block.steps.map((step: any, i: number) => (
+              {block.steps.map((step: { title: string; description: string }, i: number) => (
                 <div key={i} className="relative flex gap-5 rounded-xl border border-white/5 bg-white/[0.02] p-5">
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#00f0ff]/10 font-mono text-sm font-bold text-[#00f0ff]">
                     {String(i + 1).padStart(2, '0')}
@@ -138,12 +138,12 @@ export function ProjectDetail({ projectId, onBack }: { projectId: string; onBack
         </div>
 
         {/* Key Features Sidebar */}
-        {featuresBlock && (
+        {featuresBlock && featuresBlock.type === 'features' && (
           <div className="space-y-6 lg:pl-6">
             <div className="sticky top-24 rounded-2xl border border-white/10 bg-white/[0.02] p-6 shadow-xl">
               <h4 className="mb-6 font-semibold text-white tracking-wide uppercase text-sm">{featuresBlock.title || 'Key Features'}</h4>
               <ul className="space-y-4">
-                {(featuresBlock as any).features.map((feature: string, i: number) => (
+                {featuresBlock.features.map((feature: string, i: number) => (
                   <li key={i} className="flex items-start gap-3 text-sm text-slate-300">
                     <span className="mt-1.5 size-1.5 rounded-full bg-[#00f0ff] shrink-0 shadow-[0_0_8px_rgba(0,240,255,0.8)]" />
                     <span className="leading-snug">{feature}</span>
