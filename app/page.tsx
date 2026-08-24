@@ -9,6 +9,9 @@ import { ResumeSection } from '@/components/sections/resume-section'
 import { projectCards, type SectionId } from '@/lib/portfolio-data'
 import { cn } from '@/lib/utils'
 
+// רשימת מזהי הפרויקטים שקיים עבורם קובץ וידאו בתיקיית public/clips
+const PROJECTS_WITH_VIDEO = ['fsm', 'apple-pay-tracker', 'hdl']
+
 // --- רכיב דף הפרויקט המעודכן עם תוכן דינמי ---
 function ProjectDetail({ projectId, onBack }: { projectId: string; onBack: () => void }) {
   const [videoLoaded, setVideoLoaded] = useState(true)
@@ -105,7 +108,10 @@ function ProjectDetail({ projectId, onBack }: { projectId: string; onBack: () =>
 
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out pb-20">
-      <button onClick={onBack} className="mb-12 flex items-center gap-2 text-sm font-semibold tracking-wider text-[#00f0ff] transition-colors hover:text-white uppercase">
+      <button
+        onClick={onBack}
+        className="mb-12 flex items-center gap-2 text-sm font-semibold tracking-wider text-[#00f0ff] transition-colors hover:text-white uppercase"
+      >
         <ArrowLeft className="size-4" /> Return_To_Index
       </button>
 
@@ -118,7 +124,10 @@ function ProjectDetail({ projectId, onBack }: { projectId: string; onBack: () =>
         </p>
         <div className="flex flex-wrap gap-3">
           {project.tags.map(tag => (
-            <span key={tag} className="rounded-full border border-[#00f0ff]/40 bg-[#00f0ff]/10 px-4 py-1.5 text-xs font-semibold tracking-wider text-[#00f0ff] uppercase">
+            <span
+              key={tag}
+              className="rounded-full border border-[#00f0ff]/40 bg-[#00f0ff]/10 px-4 py-1.5 text-xs font-semibold tracking-wider text-[#00f0ff] uppercase"
+            >
               {tag}
             </span>
           ))}
@@ -176,10 +185,19 @@ export default function Page() {
       </aside>
 
       {mobileOpen && (
-        <div className="fixed inset-0 z-40 bg-[#030108]/80 backdrop-blur-md md:hidden" onClick={() => setMobileOpen(false)} aria-hidden="true" />
+        <div
+          className="fixed inset-0 z-40 bg-[#030108]/80 backdrop-blur-md md:hidden"
+          onClick={() => setMobileOpen(false)}
+          aria-hidden="true"
+        />
       )}
 
-      <aside className={cn('fixed inset-y-0 left-0 z-50 w-72 border-r border-purple-500/20 bg-[#0a0518]/95 shadow-[8px_0_30px_rgba(139,92,246,0.1)] backdrop-blur-3xl transition-transform duration-300 md:hidden', mobileOpen ? 'translate-x-0' : '-translate-x-full')}>
+      <aside
+        className={cn(
+          'fixed inset-y-0 left-0 z-50 w-72 border-r border-purple-500/20 bg-[#0a0518]/95 shadow-[8px_0_30px_rgba(139,92,246,0.1)] backdrop-blur-3xl transition-transform duration-300 md:hidden',
+          mobileOpen ? 'translate-x-0' : '-translate-x-full'
+        )}
+      >
         <Sidebar active={active} onSelect={setActive} onCloseMobile={() => setMobileOpen(false)} />
       </aside>
 
