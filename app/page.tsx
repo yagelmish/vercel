@@ -197,9 +197,10 @@ export default function Page() {
           {active === 'overview' && <OverviewSection />}
           {active === 'projects' && <ProjectsGrid onSelectProject={setActive} />}
           
-         {projectCards.some(p => p.id === active) && (
-  <ProjectDetail projectId={active} onBack={() => setActive('projects')} />
-)}
+         {/* הוספנו את key={active} כדי לאפס את הדף בכל מעבר פרויקט */}
+          {projectCards.some(p => p.id === active) && (
+            <ProjectDetail key={active} projectId={active} onBack={() => setActive('projects')} />
+          )}
           {active === 'resume' && <ResumeSection />}
         </main>
       </div>
