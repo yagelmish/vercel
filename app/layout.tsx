@@ -6,11 +6,12 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 const geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-geist-mono' })
 
-export const metadata: Metadata = {
-  title: 'EE Engineering Portfolio | Low-Level Software & Digital Systems',
-  description:
-    'Portfolio of a B.Sc. Electrical & Electronics Engineering student at Ariel University specializing in C, Assembly, HDL, and embedded microcontroller systems.',
-  generator: 'v0.app',
+export const metadata = {
+  title: 'Yagel Mishalov | Portfolio',
+  description: 'Hardware & Software Engineering Portfolio',
+  icons: {
+    icon: '/favicon.ico', 
+  },
 }
 
 export const viewport: Viewport = {
