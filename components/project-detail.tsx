@@ -142,7 +142,7 @@ export function ProjectDetail({ projectId, onBack }: { projectId: string; onBack
 
       {/* Hero Image */}
       <div className="relative mb-14 h-[420px] w-full overflow-hidden rounded-2xl border border-white/10 bg-[#0b0b0f] shadow-[0_0_50px_rgba(0,240,255,0.04)] flex items-center justify-center group">
-        <img src={project.image || `/images/${project.id}.png`} alt={project.title} className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" />
+        <img src={project.image || `/images/${project.id}/${project.id}.png`} alt={project.title} className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" />
       </div>
 
       {/* Dynamic Content Rendering */}
