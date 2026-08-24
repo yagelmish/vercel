@@ -90,7 +90,7 @@ function ProjectDetail({ projectId, onBack }: { projectId: string, onBack: () =>
               </section>
             )}
 {/* אזור נגן הסרטון לאורך - מוצג רק אם קיים סרטון לפרויקט */}
-            {projectId === 'fsm' && (
+            {project.hasVideo && (
               <section className="space-y-4">
                 <h3 className="text-2xl font-semibold text-white flex items-center gap-2.5">
                   <Play className="size-5 text-[#00f0ff]" />
@@ -225,9 +225,10 @@ export default function Page() {
         <main className="flex-1 px-6 py-12 sm:px-10 sm:py-14 lg:px-14 lg:py-16 max-w-7xl mx-auto w-full">
           {active === 'overview' && <OverviewSection />}
           {active === 'projects' && <ProjectsGrid onSelectProject={setActive} />}
-          {(active === 'hdl' || active === 'apple-pay-tracker' || active === 'fsm') && (
-            <ProjectDetail projectId={active} onBack={() => setActive('projects')} />
-          )}
+          
+         {projectCards.some(p => p.id === active) && (
+  <ProjectDetail projectId={active} onBack={() => setActive('projects')} />
+)}
           {active === 'resume' && <ResumeSection />}
         </main>
       </div>
