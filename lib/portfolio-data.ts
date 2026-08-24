@@ -8,9 +8,10 @@ export type VideoBlock = { type: 'video'; title?: string; url: string }
 export type CodeBlock = { type: 'code'; title?: string; language: string; code: string; description?: string }
 export type StepsBlock = { type: 'steps'; title: string; steps: { title: string; description: string }[] }
 export type FeaturesBlock = { type: 'features'; title: string; features: string[] }
+export type ImageBlock = { type: 'image'; title?: string; url: string; alt?: string }
 
-// סוג כללי שמאגד את כולם
-export type ContentBlock = TextBlock | VideoBlock | CodeBlock | StepsBlock | FeaturesBlock;
+// איגוד הבלוקים הקיימים
+export type ContentBlock = TextBlock | VideoBlock | CodeBlock | StepsBlock | FeaturesBlock | ImageBlock;
 
 // --- 2. הממשק החדש של הפרויקט ---
 export interface Project {
