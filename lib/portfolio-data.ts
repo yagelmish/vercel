@@ -161,25 +161,95 @@ export const projectCards: Project[] = [
         title: 'System Synchronization Code',
         description: 'Using AI tools to generate the Arduino code that synchronizes the system',
         language: 'C++ / Arduino',
-        code: `// Replace this with your actual Arduino code
-const int buttonPin = 2;
-const int clockPin = 13;
+        code: `/*
+  מערכת מנעול קוד סינכרוני - קוד 1101 עם חפיפה
+  גרסת לחצנים מעורבת:
+  - לחצן '1' הוא Normally Open (לחיצה = LOW, שחרור = HIGH)
+  - לחצן '0' הוא Normally Closed (לחיצה = HIGH, שחרור = LOW)
+*/
+
+// הגדרת פיני קלט (לחצנים)
+const int button1Pin = 6; // לחצן '1' (Normally Open - מחובר ל-GND)
+const int button0Pin = 7; // לחצן '0' (Normally Closed - עובד הפוך!)
+
+// הגדרת פיני פלט (למטריצה)
+const int dataPin = 2;    // קו הנתונים X (מחובר ל-1D, פין 2 ב-74HC74)
+const int clockPin = 3;   // קו השעון CLK (מחובר לפינים 3 ו-11 ב-74HC74)
 
 void setup() {
-  pinMode(buttonPin, INPUT_PULLUP);
+  // הגדרת לחצנים כקלטים עם נגדי משיכה פנימיים (INPUT_PULLUP)
+  pinMode(button1Pin, INPUT_PULLUP);
+  pinMode(button0Pin, INPUT_PULLUP);
+
+  // הגדרת פיני הפלט למטריצה
+  pinMode(dataPin, OUTPUT);
   pinMode(clockPin, OUTPUT);
+
+  // אתחול קווי המוצא למצב נמוך
   digitalWrite(clockPin, LOW);
+  digitalWrite(dataPin, LOW);
+
+  // פתיחת תקשורת טורית לניטור
+  Serial.begin(9600);
+  Serial.println("--- System Ready (Mixed Button Mode) ---");
+  Serial.println("Button '1' is Normally Open (NO)");
+  Serial.println("Button '0' is Normally Closed (NC)");
+
+  // ביצוע איפוס סינכרוני למכונת המצבים בהדלקה (שליחת שני אפסים)
+  softwareReset();
 }
 
 void loop() {
-  if (digitalRead(buttonPin) == LOW) {
-    delay(50); // Signal stabilization & debouncing
-    digitalWrite(clockPin, HIGH); // Clock rising edge
-    delay(10);
-    digitalWrite(clockPin, LOW); // Clock falling edge
-    
-    while(digitalRead(buttonPin) == LOW); // Wait for release
-    delay(50);
+  // --- בדיקת לחצן '1' (Normally Open - רגיל) ---
+  if (digitalRead(button1Pin) == LOW) { // לחוץ = LOW
+    delay(50); // סינון רעשים (Debounce)
+    if (digitalRead(button1Pin) == LOW) {
+      Serial.println("Button '1' Pressed! Setting X = HIGH");
+      
+      digitalWrite(dataPin, HIGH); // הפיכת הקלט ל-1 (הלד יידלק אם אנחנו ב-S3)
+      
+      while (digitalRead(button1Pin) == LOW) { // המתנה לשחרור (חזרה ל-HIGH)
+        delay(10); 
+      }
+      
+      Serial.println("Button '1' Released! Triggering Clock Pulse");
+      triggerClock();
+    }
+  }
+
+  // --- בדיקת לחצן '0' (Normally Closed - עובד הפוך!) ---
+  if (digitalRead(button0Pin) == HIGH) { // לחוץ = HIGH
+    delay(50); // סינון רעשים (Debounce)
+    if (digitalRead(button0Pin) == HIGH) {
+      Serial.println("Button '0' Pressed! Setting X = LOW");
+      
+      digitalWrite(dataPin, LOW); // הפיכת הקלט ל-0
+      
+      while (digitalRead(button0Pin) == HIGH) { // המתנה לשחרור (חזרה ל-LOW)
+        delay(10); 
+      }
+      
+      Serial.println("Button '0' Released! Triggering Clock Pulse");
+      triggerClock();
+    }
+  }
+}
+
+// פונקציה לייצור פעימת שעון מבוקרת
+void triggerClock() {
+  digitalWrite(clockPin, HIGH);
+  delay(10); 
+  digitalWrite(clockPin, LOW);
+  delay(10); 
+}
+
+// פונקציית איפוס סינכרוני תוכנתי
+void softwareReset() {
+  digitalWrite(dataPin, LOW);
+  triggerClock();
+  triggerClock();
+  Serial.println("Software Reset Complete. Current State: S0 (00)");
+}
   }
 }`
       },
