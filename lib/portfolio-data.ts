@@ -162,59 +162,94 @@ export const projectCards: Project[] = [
         description: 'Using AI tools to generate the Arduino code that synchronizes the system',
         language: 'C++ / Arduino',
         code: `/*
-  מערכת מנעול קוד סינכרוני - קוד 1101 עם חפיפה
-  גרסת לחצנים מעורבת:
-  - לחצן '1' הוא Normally Open (לחיצה = LOW, שחרור = HIGH)
-  - לחצן '0' הוא Normally Closed (לחיצה = HIGH, שחרור = LOW)
+  Synchronous code lock system - Code 1101 with overlap
+  Mixed button version:
+  - Button '1' is Normally Open (Pressed = LOW, Released = HIGH)
+  - Button '0' is Normally Closed (Pressed = HIGH, Released = LOW)
 */
 
-// הגדרת פיני קלט (לחצנים)
-const int button1Pin = 6; // לחצן '1' (Normally Open - מחובר ל-GND)
-const int button0Pin = 7; // לחצן '0' (Normally Closed - עובד הפוך!)
+// Input pin definitions (Buttons)
+const int button1Pin = 6; // Button '1' (Normally Open - connected to GND)
+const int button0Pin = 7; // Button '0' (Normally Closed - works in reverse!)
 
-// הגדרת פיני פלט (למטריצה)
-const int dataPin = 2;    // קו הנתונים X (מחובר ל-1D, פין 2 ב-74HC74)
-const int clockPin = 3;   // קו השעון CLK (מחובר לפינים 3 ו-11 ב-74HC74)
+// Output pin definitions (to matrix)
+const int dataPin = 2;    // Data line X (connected to 1D, pin 2 on 74HC74)
+const int clockPin = 3;   // Clock line CLK (connected to pins 3 and 11 on 74HC74)
 
 void setup() {
-  // הגדרת לחצנים כקלטים עם נגדי משיכה פנימיים (INPUT_PULLUP)
+  // Set buttons as inputs with internal pull-up resistors (INPUT_PULLUP)
   pinMode(button1Pin, INPUT_PULLUP);
   pinMode(button0Pin, INPUT_PULLUP);
 
-  // הגדרת פיני הפלט למטריצה
+  // Set output pins for the matrix
   pinMode(dataPin, OUTPUT);
   pinMode(clockPin, OUTPUT);
 
-  // אתחול קווי המוצא למצב נמוך
+  // Initialize output lines to LOW
   digitalWrite(clockPin, LOW);
   digitalWrite(dataPin, LOW);
 
-  // פתיחת תקשורת טורית לניטור
+  // Open serial communication for monitoring
   Serial.begin(9600);
   Serial.println("--- System Ready (Mixed Button Mode) ---");
   Serial.println("Button '1' is Normally Open (NO)");
   Serial.println("Button '0' is Normally Closed (NC)");
 
-  // ביצוע איפוס סינכרוני למכונת המצבים בהדלקה (שליחת שני אפסים)
+  // Perform synchronous reset for the state machine on power-up (send two zeros)
   softwareReset();
 }
 
 void loop() {
-  // --- בדיקת לחצן '1' (Normally Open - רגיל) ---
-  if (digitalRead(button1Pin) == LOW) { // לחוץ = LOW
-    delay(50); // סינון רעשים (Debounce)
+  // --- Check Button '1' (Normally Open - standard) ---
+  if (digitalRead(button1Pin) == LOW) { // Pressed = LOW
+    delay(50); // Debounce
     if (digitalRead(button1Pin) == LOW) {
       Serial.println("Button '1' Pressed! Setting X = HIGH");
       
-      digitalWrite(dataPin, HIGH); // הפיכת הקלט ל-1 (הלד יידלק אם אנחנו ב-S3)
+      digitalWrite(dataPin, HIGH); // Set input to 1 (The LED will turn on if we are in state S3)
       
-      while (digitalRead(button1Pin) == LOW) { // המתנה לשחרור (חזרה ל-HIGH)
+      while (digitalRead(button1Pin) == LOW) { // Wait for release (return to HIGH)
         delay(10); 
       }
       
       Serial.println("Button '1' Released! Triggering Clock Pulse");
       triggerClock();
     }
+  }
+
+  // --- Check Button '0' (Normally Closed - works in reverse!) ---
+  if (digitalRead(button0Pin) == HIGH) { // Pressed = HIGH
+    delay(50); // Debounce
+    if (digitalRead(button0Pin) == HIGH) {
+      Serial.println("Button '0' Pressed! Setting X = LOW");
+      
+      digitalWrite(dataPin, LOW); // Set input to 0
+      
+      while (digitalRead(button0Pin) == HIGH) { // Wait for release (return to LOW)
+        delay(10); 
+      }
+      
+      Serial.println("Button '0' Released! Triggering Clock Pulse");
+      triggerClock();
+    }
+  }
+}
+
+// Function to generate a controlled clock pulse
+void triggerClock() {
+  digitalWrite(clockPin, HIGH);
+  delay(10); 
+  digitalWrite(clockPin, LOW);
+  delay(10); 
+}
+
+// Software synchronous reset function
+void softwareReset() {
+  digitalWrite(dataPin, LOW);
+  triggerClock();
+  triggerClock();
+  Serial.println("Software Reset Complete. Current State: S0 (00)");
+}
   }
 
   // --- בדיקת לחצן '0' (Normally Closed - עובד הפוך!) ---
