@@ -269,24 +269,7 @@ void softwareReset() {
     }
   }
 }
-
-// פונקציה לייצור פעימת שעון מבוקרת
-void triggerClock() {
-  digitalWrite(clockPin, HIGH);
-  delay(10); 
-  digitalWrite(clockPin, LOW);
-  delay(10); 
-}
-
-// פונקציית איפוס סינכרוני תוכנתי
-void softwareReset() {
-  digitalWrite(dataPin, LOW);
-  triggerClock();
-  triggerClock();
-  Serial.println("Software Reset Complete. Current State: S0 (00)");
-}
-  }
-}`
+`
       },
       {
         type: 'features',
