@@ -40,7 +40,7 @@ export const projectCards: Project[] = [
     tags: ['HDL', 'CPU', 'LOGIC'],
     icon: Cpu,
     glyph: 'ALU · REG · MUX',
-    image: '/images/hdl.png',
+   image: '/images/hdl/hero.png',
     contentBlocks: [
       {
         type: 'text',
@@ -77,7 +77,7 @@ export const projectCards: Project[] = [
     tags: ['IOS SHORTCUTS', 'MAKE', 'GOOGLE SHEETS API'],
     icon: Code,
     glyph: 'AUTOMATION · API · SHEETS',
-    image: '/images/apple-pay-tracker.png',
+    image: '/images/apple-pay-tracker/hero.png',
     contentBlocks: [
       {
         type: 'text',
@@ -92,7 +92,7 @@ export const projectCards: Project[] = [
       {
         type: 'video',
         title: 'Demo & Walkthrough',
-        url: '/clips/apple-pay-tracker.mp4'
+        url: '/clips/apple-pay-tracker/demo.mp4'
       },
       {
         type: 'steps',
@@ -129,7 +129,7 @@ export const projectCards: Project[] = [
     tags: ['ARDUINO', 'FSM', 'EMBEDDED C', 'HARDWARE'],
     icon: Lock,
     glyph: 'FSM · I/O · LOGIC',
-    image: '/images/fsm.jpeg', 
+    image: '/images/fsm/hero.png', 
     contentBlocks: [
       {
         type: 'text',
@@ -144,7 +144,7 @@ export const projectCards: Project[] = [
       {
         type: 'video',
         title: 'Demo & Walkthrough',
-        url: '/clips/fsm.mp4'
+        url: '/clips/fsm/demo.mp4'
       },
       {
         type: 'steps',
