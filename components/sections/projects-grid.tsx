@@ -1,6 +1,7 @@
 'use client'
 
 import { ArrowUpRight } from 'lucide-react'
+import Image from 'next/image'
 import { projectCards, type SectionId } from '@/lib/portfolio-data'
 
 export function ProjectsGrid({ onSelectProject }: { onSelectProject: (id: SectionId) => void }) {
@@ -26,16 +27,18 @@ export function ProjectsGrid({ onSelectProject }: { onSelectProject: (id: Sectio
               {/* Visual header */}
               <div className="relative aspect-[16/10] overflow-hidden border-b border-white/5 bg-[#0b0b0f]">
                 {/* תמונת הפרויקט ברקע חצי שקוף */}
-                <img
-                  src={project.image || `/images/${project.id}.png`}
-                  alt={project.title}
-                  className="absolute inset-0 h-full w-full object-cover opacity-25 transition-all duration-700 ease-out group-hover:scale-105 group-hover:opacity-40"
-                  onError={(e) => {
-                    // אם אין תמונה מתאימה בתיקייה, מסתיר אותה כדי לא לשבור את המראה
-                    e.currentTarget.style.display = 'none'
-                  }}
-                />
-
+                {/* תמונת הפרויקט ברקע חצי שקוף - שודרג ל-Next Image לטעינה מהירה */}
+<Image 
+  src={project.image || `/images/${project.id}.png`} 
+  alt={project.title}
+  fill
+  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+  className="object-cover opacity-25 transition-all duration-700 ease-out group-hover:scale-105 group-hover:opacity-40"
+  onError={(e) => {
+    // אם אין תמונה מתאימה בתיקייה, מסתיר אותה כדי לא לשבור את המראה
+    e.currentTarget.style.display = 'none'
+  }}
+/>
                 {/* שכבת Grid טקסטורה */}
                 <div
                   aria-hidden="true"
