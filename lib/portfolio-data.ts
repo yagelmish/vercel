@@ -251,23 +251,6 @@ void softwareReset() {
   Serial.println("Software Reset Complete. Current State: S0 (00)");
 }
   }
-
-  // --- בדיקת לחצן '0' (Normally Closed - עובד הפוך!) ---
-  if (digitalRead(button0Pin) == HIGH) { // לחוץ = HIGH
-    delay(50); // סינון רעשים (Debounce)
-    if (digitalRead(button0Pin) == HIGH) {
-      Serial.println("Button '0' Pressed! Setting X = LOW");
-      
-      digitalWrite(dataPin, LOW); // הפיכת הקלט ל-0
-      
-      while (digitalRead(button0Pin) == HIGH) { // המתנה לשחרור (חזרה ל-LOW)
-        delay(10); 
-      }
-      
-      Serial.println("Button '0' Released! Triggering Clock Pulse");
-      triggerClock();
-    }
-  }
 }
 `
       },
