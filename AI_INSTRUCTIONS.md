@@ -24,11 +24,33 @@ Optimize for:
 
 ---
 
-## 2. Single Source of Truth
+## 2. Single Source of Truth & Bilingual Architecture
 
 `lib/portfolio-data.ts` is the primary source of truth for portfolio project content.
 
-A project should contain all information required to describe and render that project.
+`lib/site-content.ts` is the primary source of truth for all site-wide UI copy (sidebar, overview, grid headings, project detail chrome, resume/contact, metadata).
+
+`lib/i18n.ts` defines the core bilingual types (`Locale`, `LocalizedString`, `LocalizableText`) and resolution helpers (`resolveText`, `getLocaleDir`, `getStableTextKey`).
+
+`components/language-provider.tsx` manages active language state (`'en' | 'he'`), updates `<html lang dir>` and `document.title`, persists selection in `localStorage` (`portfolio-locale`), and exposes `useLanguage()` (`{ locale, dir, setLocale, toggleLocale, t }`).
+
+A project should contain all information required to describe and render that project in **both** English (`en`) and Hebrew (`he`) within a single project object using `LocalizedString` (`{ en: string; he: string }`) or `LocalizableText` (`string | LocalizedString`).
+
+Do not duplicate project objects across separate language files or create parallel `projectsEn` / `projectsHe` arrays. Structural fields (`id`, `category`, `icon`, `image`, `glyph`, media `url`s, `code` snippets, and block ordering) are defined once per project so any structural or media update applies to both languages automatically.
+
+### Bilingual & RTL/LTR Rules for Components
+
+When editing or creating UI components or new `ContentBlock` renderers:
+
+* **Never hardcode UI copy inside components.** Put all site-wide UI strings in `lib/site-content.ts` and all project text in `lib/portfolio-data.ts`.
+* **Always resolve text with `t(...)`** from `useLanguage()` (e.g., `{t(project.title)}`, `{t(siteContent.overview.heading)}`).
+* **Use `getStableTextKey(...)`** for React `key` props on `LocalizableText` values so switching languages does not unnecessarily remount elements.
+* **Use Tailwind logical properties instead of physical left/right classes** so English (`dir="ltr"`) and Hebrew (`dir="rtl"`) mirror cleanly:
+  * Prefer `start-*` / `end-*`, `ps-*` / `pe-*`, `ms-*` / `me-*`, `border-s` / `border-e`, `text-start` / `text-end` over `left-*`, `right-*`, `pl-*`, `pr-*`, `ml-*`, `mr-*`, `border-l`, `border-r`, `text-left`.
+* **Keep Hebrew typography legible:** When using wide `tracking-*` on English labels, scope it with `ltr:tracking-... rtl:tracking-normal`.
+* **Handle directional icons & technical LTR blocks explicitly:**
+  * Mirror directional arrows in RTL (`rtl:rotate-180`, `rtl:-scale-x-100`).
+  * Keep code blocks, technical glyphs, emails, handles, and paths wrapped with `dir="ltr"` (and `text-left` for multi-line code) so punctuation and syntax are never inverted in Hebrew mode.
 
 Do not duplicate project metadata in other files.
 
@@ -60,13 +82,14 @@ When adding a normal project:
 
 ### Allowed changes
 
-* Add the project to `lib/portfolio-data.ts`
+* Add the project to `lib/portfolio-data.ts` (including both `en` and `he` strings for every `LocalizedString` field)
 * Add required images/videos/assets under `public/`
 
 ### Do NOT modify
 
 * `app/page.tsx`
 * `components/project-detail.tsx`
+* `lib/site-content.ts` (unless adding a new site-wide UI label)
 * Existing project components
 * Navigation
 * Layout
@@ -124,6 +147,10 @@ Use the existing TypeScript types such as:
 * `CodeBlock`
 * `StepsBlock`
 * `FeaturesBlock`
+* `ImageBlock`
+* `Locale`
+* `LocalizedString`
+* `LocalizableText`
 
 If a new content type is required, create a proper TypeScript type for it.
 
@@ -163,7 +190,7 @@ For example, a new Gallery block might look conceptually like:
 ```ts
 type GalleryBlock = {
   type: 'gallery'
-  title?: string
+  title?: LocalizedString
   images: string[]
 }
 ```
@@ -173,7 +200,7 @@ A Timeline might look conceptually like:
 ```ts
 type TimelineBlock = {
   type: 'timeline'
-  title?: string
+  title?: LocalizedString
   events: TimelineEvent[]
 }
 ```
@@ -233,7 +260,7 @@ Example:
 contentBlocks: [
   {
     type: 'gallery',
-    title: 'Screenshots',
+    title: { en: 'Screenshots', he: 'צילומי מסך' },
     images: [
       '/images/project-a-1.png',
       '/images/project-a-2.png',
@@ -326,7 +353,7 @@ It should remain generic.
 
 It should not contain logic specific to individual projects.
 
-When adding a new content-block type, extend the existing rendering mechanism rather than creating project-specific logic.
+When adding a new content-block type, extend the existing rendering mechanism rather than creating project-specific logic. Every new block renderer must resolve translatable fields via `useLanguage().t`, use logical Tailwind spacing/alignment classes for RTL/LTR parity, and mark code or syntax-heavy content with `dir="ltr"`.
 
 Do not perform unrelated refactors while adding a new block.
 
@@ -383,10 +410,11 @@ After changes, verify that all existing projects still render correctly.
 
 A change is considered complete when:
 
-* TypeScript has no errors.
+* TypeScript has no errors (`tsc --noEmit`).
 * The project builds successfully.
-* Existing projects still work.
-* Existing visual behavior is preserved.
+* Existing projects still work in both English (`en` / LTR) and Hebrew (`he` / RTL).
+* All new text fields provide both `en` and `he` translations (`LocalizedString`) and no untranslated strings are hardcoded in components.
+* Existing visual behavior is preserved across both LTR and RTL layouts.
 * No unnecessary `any` was introduced.
 * No project-specific exceptions were introduced.
 * No duplicate project metadata was created.

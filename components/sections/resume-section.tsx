@@ -1,35 +1,56 @@
-import { Mail, Code2, Briefcase, Download, MapPin } from 'lucide-react'
+'use client'
 
-const skills = ['C', 'Assembly', 'HDL', 'Embedded C', 'Arduino', 'Digital Logic', 'Git', 'Linux']
+import { Mail, Code2, Briefcase, Download, MapPin, type LucideIcon } from 'lucide-react'
+import { useLanguage } from '@/components/language-provider'
+import { getStableTextKey } from '@/lib/i18n'
+import { siteContent, type ContactIconKey } from '@/lib/site-content'
+
+const contactIcons: Record<ContactIconKey, LucideIcon> = {
+  mail: Mail,
+  briefcase: Briefcase,
+  code: Code2,
+  pin: MapPin,
+}
 
 export function ResumeSection() {
+  const { t } = useLanguage()
+
   return (
     <section className="mx-auto max-w-3xl">
-      <p className="font-mono text-sm tracking-widest text-accent">RESUME / CONTACT</p>
+      <p className="font-mono text-sm ltr:tracking-widest rtl:tracking-normal text-accent">
+        {t(siteContent.resume.eyebrow)}
+      </p>
       <h1 className="mt-4 text-balance text-3xl font-semibold leading-tight text-foreground sm:text-4xl">
-        Let&apos;s build something at the hardware&ndash;software boundary
+        {t(siteContent.resume.heading)}
       </h1>
       <p className="mt-6 text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
-        I&apos;m actively seeking a student or junior engineering position. Reach out and I&apos;ll
-        respond promptly &mdash; I&apos;d be glad to share code, schematics, and project write-ups.
+        {t(siteContent.resume.bio)}
       </p>
 
       <div className="mt-10 grid gap-3 sm:grid-cols-2">
-        <ContactRow icon={Mail} label="Email" value="student@ariel.ac.il" href="mailto:student@ariel.ac.il" />
-        <ContactRow icon={Briefcase} label="LinkedIn" value="/in/ee-student" href="#" />
-        <ContactRow icon={Code2} label="GitHub" value="@ee-student" href="#" />
-        <ContactRow icon={MapPin} label="Location" value="Israel" />
+        {siteContent.resume.contactItems.map((item) => (
+          <ContactRow
+            key={item.id}
+            icon={contactIcons[item.iconKey]}
+            label={t(item.label)}
+            value={t(item.value)}
+            href={item.href}
+            ltrValue={item.ltrValue}
+          />
+        ))}
       </div>
 
       <div className="mt-10">
-        <p className="font-mono text-xs tracking-widest text-muted-foreground">CORE SKILLS</p>
+        <p className="font-mono text-xs ltr:tracking-widest rtl:tracking-normal text-muted-foreground">
+          {t(siteContent.resume.coreSkillsLabel)}
+        </p>
         <div className="mt-3 flex flex-wrap gap-2.5">
-          {skills.map((s) => (
+          {siteContent.resume.skills.map((skill) => (
             <span
-              key={s}
+              key={getStableTextKey(skill)}
               className="rounded-md border border-border bg-card/40 px-3 py-1.5 text-sm text-foreground"
             >
-              {s}
+              {t(skill)}
             </span>
           ))}
         </div>
@@ -40,7 +61,7 @@ export function ResumeSection() {
         className="mt-10 inline-flex items-center gap-2 rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-accent-foreground transition-shadow hover:shadow-[0_0_20px] hover:shadow-accent/40"
       >
         <Download className="size-4" />
-        Download Résumé (PDF)
+        {t(siteContent.resume.downloadResume)}
       </a>
     </section>
   )
@@ -51,22 +72,29 @@ function ContactRow({
   label,
   value,
   href,
+  ltrValue,
 }: {
-  icon: typeof Mail
+  icon: LucideIcon
   label: string
   value: string
   href?: string
+  ltrValue?: boolean
 }) {
   const content = (
     <>
       <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary">
         <Icon className="size-4" />
       </span>
-      <span className="min-w-0">
-        <span className="block font-mono text-xs tracking-widest text-muted-foreground">
+      <span className="min-w-0 text-start">
+        <span className="block font-mono text-xs ltr:tracking-widest rtl:tracking-normal text-muted-foreground">
           {label.toUpperCase()}
         </span>
-        <span className="block truncate text-sm text-foreground">{value}</span>
+        <span
+          dir={ltrValue ? 'ltr' : undefined}
+          className="inline-block max-w-full truncate text-sm text-foreground"
+        >
+          {value}
+        </span>
       </span>
     </>
   )

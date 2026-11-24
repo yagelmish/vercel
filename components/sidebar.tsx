@@ -6,13 +6,16 @@ import {
   LayoutGrid,
   FileText,
   FolderGit2,
-  Search,
+  Languages,
   X,
   Cpu,
   Code,
   BookOpen,
+  type LucideIcon,
 } from 'lucide-react'
-import { projectCards, type SectionId } from '@/lib/portfolio-data'
+import { useLanguage } from '@/components/language-provider'
+import { projectCards, type Project, type SectionId } from '@/lib/portfolio-data'
+import { siteContent } from '@/lib/site-content'
 import { cn } from '@/lib/utils'
 
 type NavProps = {
@@ -22,18 +25,18 @@ type NavProps = {
 }
 
 export function Sidebar({ active, onSelect, onCloseMobile }: NavProps) {
-const isProjectActive = active === 'projects' || projectCards.some(p => p.id === active)
+  const { locale, toggleLocale, t } = useLanguage()
+  const isProjectActive = active === 'projects' || projectCards.some((p) => p.id === active)
   const [projectsOpen, setProjectsOpen] = useState(isProjectActive)
-  
-  // פתיחת קטגוריות נפרדות
-  const [openCategories, setOpenCategories] = useState<{ [key: string]: boolean }>({
+
+  const [openCategories, setOpenCategories] = useState<Record<'hardware' | 'software' | 'learning', boolean>>({
     hardware: true,
     software: true,
     learning: true,
   })
 
-  const toggleCategory = (cat: string) => {
-    setOpenCategories(prev => ({ ...prev, [cat]: !prev[cat] }))
+  const toggleCategory = (cat: 'hardware' | 'software' | 'learning') => {
+    setOpenCategories((prev) => ({ ...prev, [cat]: !prev[cat] }))
   }
 
   const handleSelect = (id: SectionId) => {
@@ -41,33 +44,45 @@ const isProjectActive = active === 'projects' || projectCards.some(p => p.id ===
     onCloseMobile()
   }
 
-  // מיון הפרויקטים לפי קטגוריות
-  const hardwareProjects = projectCards.filter(p => p.category === 'hardware')
-  const softwareProjects = projectCards.filter(p => p.category === 'software')
-  const learningProjects = projectCards.filter(p => p.category === 'learning')
+  const hardwareProjects = projectCards.filter((p) => p.category === 'hardware')
+  const softwareProjects = projectCards.filter((p) => p.category === 'software')
+  const learningProjects = projectCards.filter((p) => p.category === 'learning')
 
   return (
-    <nav className="relative flex h-full flex-col p-6 overflow-y-auto" aria-label="Portfolio sections">
+    <nav
+      className="relative flex h-full flex-col p-6 overflow-y-auto"
+      aria-label={t(siteContent.sidebar.navAriaLabel)}
+    >
       <div className="mb-8 flex items-start justify-between">
         <div>
-          <p className="font-mono text-[11px] font-medium uppercase tracking-[0.25em] text-[#00f0ff]">
-            Yagel Mishalov
+          <p className="font-mono text-[11px] font-medium uppercase ltr:tracking-[0.25em] rtl:tracking-normal text-[#00f0ff]">
+            {t(siteContent.brand.ownerName)}
           </p>
           <h1 className="mt-2 text-xl font-bold leading-tight text-white">
-            Projects Portfolio
+            {t(siteContent.brand.portfolioTitle)}
           </h1>
         </div>
-        <button type="button" onClick={onCloseMobile} className="rounded-md p-1.5 text-slate-400 transition-colors hover:text-white lg:hidden">
+        <button
+          type="button"
+          onClick={onCloseMobile}
+          aria-label={t(siteContent.sidebar.closeMenuAriaLabel)}
+          className="rounded-md p-1.5 text-slate-400 transition-colors hover:text-white md:hidden"
+        >
           <X className="size-5" />
         </button>
       </div>
 
-      <p className="mb-3 px-1 font-mono text-[10px] font-medium uppercase tracking-[0.25em] text-slate-500">
-        Control Panel
+      <p className="mb-3 px-1 font-mono text-[10px] font-medium uppercase ltr:tracking-[0.25em] rtl:tracking-normal text-slate-500">
+        {t(siteContent.sidebar.controlPanel)}
       </p>
 
       <div className="flex flex-col gap-1">
-        <NavButton icon={LayoutGrid} label="Overview" selected={active === 'overview'} onClick={() => handleSelect('overview')} />
+        <NavButton
+          icon={LayoutGrid}
+          label={t(siteContent.sidebar.nav.overview)}
+          selected={active === 'overview'}
+          onClick={() => handleSelect('overview')}
+        />
 
         {/* Projects Main Dropdown */}
         <div className="relative">
@@ -84,66 +99,95 @@ const isProjectActive = active === 'projects' || projectCards.some(p => p.id ===
           >
             <span className="flex items-center gap-3">
               <FolderGit2 className="size-4 shrink-0" />
-              Projects
+              {t(siteContent.sidebar.nav.projects)}
             </span>
             <ChevronDown className={cn('size-4 transition-transform duration-200', projectsOpen && 'rotate-180')} />
           </button>
 
           {isProjectActive && (
-            <span aria-hidden="true" className="absolute -right-6 top-0 h-full w-0.5 rounded-full bg-[#00f0ff] shadow-[0_0_10px_2px_rgba(0,240,255,0.7)]" />
+            <span
+              aria-hidden="true"
+              className="absolute -end-6 top-0 h-full w-0.5 rounded-full bg-[#00f0ff] shadow-[0_0_10px_2px_rgba(0,240,255,0.7)]"
+            />
           )}
         </div>
 
         {/* Categories Accordions inside Projects */}
-        <div className={cn('grid transition-all duration-300 ease-out', projectsOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0')}>
+        <div
+          className={cn(
+            'grid transition-all duration-300 ease-out',
+            projectsOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+          )}
+        >
           <div className="overflow-hidden">
-            <div className="ml-4 mt-1 flex flex-col border-l border-white/10 pl-3 space-y-2">
-              
-              {/* 1. חומרה */}
-              <CategoryGroup 
-                title="Hardware" 
-                icon={Cpu} 
-                isOpen={openCategories.hardware} 
+            <div className="ms-4 mt-1 flex flex-col border-s border-white/10 ps-3 space-y-2">
+              <CategoryGroup
+                title={t(siteContent.sidebar.categories.hardware)}
+                icon={Cpu}
+                isOpen={openCategories.hardware}
                 onToggle={() => toggleCategory('hardware')}
                 items={hardwareProjects}
                 activeId={active}
+                emptyLabel={t(siteContent.sidebar.noProjects)}
                 onSelectProject={handleSelect}
               />
 
-              {/* 2. תוכנה */}
-              <CategoryGroup 
-                title="Software" 
-                icon={Code} 
-                isOpen={openCategories.software} 
+              <CategoryGroup
+                title={t(siteContent.sidebar.categories.software)}
+                icon={Code}
+                isOpen={openCategories.software}
                 onToggle={() => toggleCategory('software')}
                 items={softwareProjects}
                 activeId={active}
+                emptyLabel={t(siteContent.sidebar.noProjects)}
                 onSelectProject={handleSelect}
               />
 
-              {/* 3. למידה */}
-              <CategoryGroup 
-                title="Learning" 
-                icon={BookOpen} 
-                isOpen={openCategories.learning} 
+              <CategoryGroup
+                title={t(siteContent.sidebar.categories.learning)}
+                icon={BookOpen}
+                isOpen={openCategories.learning}
                 onToggle={() => toggleCategory('learning')}
                 items={learningProjects}
                 activeId={active}
+                emptyLabel={t(siteContent.sidebar.noProjects)}
                 onSelectProject={handleSelect}
               />
-
             </div>
           </div>
         </div>
 
-        <NavButton icon={FileText} label="Resume / Contact" selected={active === 'resume'} onClick={() => handleSelect('resume')} />
+        <NavButton
+          icon={FileText}
+          label={t(siteContent.sidebar.nav.resume)}
+          selected={active === 'resume'}
+          onClick={() => handleSelect('resume')}
+        />
       </div>
 
       <div className="mt-auto flex flex-col gap-4 pt-6">
-        <button type="button" className="flex w-full items-center gap-2.5 rounded-lg border border-white/10 bg-white/[0.02] px-3 py-2.5 text-sm text-slate-400 transition-colors hover:border-white/20 hover:text-white">
-          <Search className="size-4 shrink-0" />
-          <span className="flex-1 text-left">Quick jump</span>
-          <kbd className="rounded border border-white/10 bg-white/[0.04] px-1.5 py-0.5 font-mono text-[10px] text-slate-400">⌘K</kbd>
+        <button
+          type="button"
+          onClick={toggleLocale}
+          aria-label={t(siteContent.sidebar.languageSwitch.ariaLabel)}
+          className="group flex w-full items-center gap-2.5 rounded-lg border border-white/10 bg-white/[0.02] px-3 py-2.5 text-sm text-slate-400 transition-colors hover:border-[#00f0ff]/40 hover:bg-white/[0.04] hover:text-white"
+        >
+          <Languages className="size-4 shrink-0 text-slate-400 transition-colors group-hover:text-[#00f0ff]" />
+          <span className="flex-1 text-start font-medium">
+            {t(siteContent.sidebar.languageSwitch.switchToLabel)}
+          </span>
+          <span
+            dir="ltr"
+            className="flex items-center gap-1 rounded border border-white/10 bg-white/[0.04] px-1.5 py-0.5 font-mono text-[10px]"
+          >
+            <span className={locale === 'en' ? 'font-semibold text-[#00f0ff]' : 'text-slate-500'}>
+              EN
+            </span>
+            <span className="text-slate-600">/</span>
+            <span className={locale === 'he' ? 'font-semibold text-[#00f0ff]' : 'text-slate-500'}>
+              עב
+            </span>
+          </span>
         </button>
 
         <div className="flex items-center gap-2.5 px-1">
@@ -151,15 +195,38 @@ const isProjectActive = active === 'projects' || projectCards.some(p => p.id ===
             <span className="absolute inline-flex size-full animate-ping rounded-full bg-[#00f0ff] opacity-60" />
             <span className="relative inline-flex size-2 rounded-full bg-[#00f0ff] shadow-[0_0_8px_2px_rgba(0,240,255,0.6)]" />
           </span>
-          <span className="font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-slate-400">Available for Opportunities</span>
+          <span className="font-mono text-[10px] font-medium uppercase ltr:tracking-[0.2em] rtl:tracking-normal text-slate-400">
+            {t(siteContent.sidebar.availability)}
+          </span>
         </div>
       </div>
     </nav>
   )
 }
 
-// רכיב עזר להצגת קטגוריה נפתחת בתפריט
-function CategoryGroup({ title, icon: Icon, isOpen, onToggle, items, activeId, onSelectProject }: any) {
+interface CategoryGroupProps {
+  title: string
+  icon: LucideIcon
+  isOpen: boolean
+  onToggle: () => void
+  items: Project[]
+  activeId: SectionId
+  emptyLabel: string
+  onSelectProject: (id: SectionId) => void
+}
+
+function CategoryGroup({
+  title,
+  icon: Icon,
+  isOpen,
+  onToggle,
+  items,
+  activeId,
+  emptyLabel,
+  onSelectProject,
+}: CategoryGroupProps) {
+  const { t } = useLanguage()
+
   return (
     <div className="mt-1">
       <button
@@ -175,11 +242,11 @@ function CategoryGroup({ title, icon: Icon, isOpen, onToggle, items, activeId, o
       </button>
 
       {isOpen && (
-        <div className="ml-3 mt-1 flex flex-col border-l border-white/10 pl-2 space-y-1">
+        <div className="ms-3 mt-1 flex flex-col border-s border-white/10 ps-2 space-y-1">
           {items.length === 0 ? (
-            <span className="text-[11px] text-slate-600 py-1">No projects</span>
+            <span className="text-[11px] text-slate-600 py-1">{emptyLabel}</span>
           ) : (
-            items.map((proj: any) => {
+            items.map((proj) => {
               const ProjIcon = proj.icon
               return (
                 <button
@@ -187,12 +254,12 @@ function CategoryGroup({ title, icon: Icon, isOpen, onToggle, items, activeId, o
                   type="button"
                   onClick={() => onSelectProject(proj.id as SectionId)}
                   className={cn(
-                    "flex items-center gap-2 rounded-md px-2 py-1.5 text-left text-[12px] transition-colors hover:text-white truncate",
-                    activeId === proj.id ? "text-[#00f0ff] font-medium" : "text-slate-400"
+                    'flex items-center gap-2 rounded-md px-2 py-1.5 text-start text-[12px] transition-colors hover:text-white truncate',
+                    activeId === proj.id ? 'text-[#00f0ff] font-medium' : 'text-slate-400'
                   )}
                 >
                   <ProjIcon className="size-3 shrink-0 opacity-70" />
-                  <span className="truncate">{proj.title}</span>
+                  <span className="truncate">{t(proj.title)}</span>
                 </button>
               )
             })
@@ -203,13 +270,23 @@ function CategoryGroup({ title, icon: Icon, isOpen, onToggle, items, activeId, o
   )
 }
 
-function NavButton({ icon: Icon, label, selected, onClick }: { icon: typeof Cpu, label: string, selected: boolean, onClick: () => void }) {
+function NavButton({
+  icon: Icon,
+  label,
+  selected,
+  onClick,
+}: {
+  icon: LucideIcon
+  label: string
+  selected: boolean
+  onClick: () => void
+}) {
   return (
     <button
       type="button"
       onClick={onClick}
       className={cn(
-        'flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm font-medium transition-colors',
+        'flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-start text-sm font-medium transition-colors',
         selected ? 'bg-white/[0.04] text-white' : 'text-slate-400 hover:bg-white/[0.03] hover:text-white'
       )}
     >
