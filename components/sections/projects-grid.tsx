@@ -4,6 +4,7 @@ import { ArrowUpRight } from 'lucide-react'
 import Image from 'next/image'
 import { useLanguage } from '@/components/language-provider'
 import { getStableTextKey } from '@/lib/i18n'
+import { getMediaUrl } from '@/lib/media'
 import { projectCards, type SectionId } from '@/lib/portfolio-data'
 import { siteContent } from '@/lib/site-content'
 
@@ -34,7 +35,7 @@ export function ProjectsGrid({ onSelectProject }: { onSelectProject: (id: Sectio
               {/* Visual header */}
               <div className="relative aspect-[16/10] overflow-hidden border-b border-white/5 bg-[#0b0b0f]">
                 <Image
-                  src={project.image || `/images/${project.id}.png`}
+                  src={getMediaUrl(project.image || `/images/${project.id}.png`)}
                   alt={title}
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

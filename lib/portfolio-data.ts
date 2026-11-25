@@ -1,5 +1,6 @@
 import { Cpu, Code, Lock, type LucideIcon } from 'lucide-react'
 import type { LocalizableText, LocalizedString } from '@/lib/i18n'
+import { getMediaUrl } from '@/lib/media'
 
 export type SectionId = 'overview' | 'projects' | 'resume' | (string & {});
 
@@ -49,7 +50,7 @@ export const projectCards: Project[] = [
     tags: ['HDL', 'CPU', { en: 'LOGIC', he: 'לוגיקה' }],
     icon: Cpu,
     glyph: 'ALU · REG · MUX',
-    image: '/images/hdl/hero.png',
+    image: getMediaUrl('/images/hdl/hero.png'),
     contentBlocks: [
       {
         type: 'text',
@@ -117,7 +118,7 @@ export const projectCards: Project[] = [
     tags: ['IOS SHORTCUTS', 'MAKE', 'GOOGLE SHEETS API'],
     icon: Code,
     glyph: 'AUTOMATION · API · SHEETS',
-    image: '/images/apple-pay-tracker/hero.png',
+    image: getMediaUrl('/images/apple-pay-tracker/hero.png'),
     contentBlocks: [
       {
         type: 'text',
@@ -138,7 +139,7 @@ export const projectCards: Project[] = [
       {
         type: 'video',
         title: { en: 'Demo & Walkthrough', he: 'הדגמה והסבר' },
-        url: '/clips/apple-pay-tracker/demo.mp4',
+        url: getMediaUrl('/clips/apple-pay-tracker/demo.mp4'),
       },
       {
         type: 'steps',
@@ -209,7 +210,7 @@ export const projectCards: Project[] = [
     tags: ['ARDUINO', 'FSM', 'EMBEDDED C', { en: 'HARDWARE', he: 'חומרה' }],
     icon: Lock,
     glyph: 'FSM · I/O · LOGIC',
-    image: '/images/fsm/hero.png',
+    image: getMediaUrl('/images/fsm/hero.png'),
     contentBlocks: [
       {
         type: 'text',
@@ -230,7 +231,7 @@ export const projectCards: Project[] = [
       {
         type: 'video',
         title: { en: 'Demo & Walkthrough', he: 'הדגמה והסבר' },
-        url: '/clips/fsm/demo.mp4',
+        url: getMediaUrl('/clips/fsm/demo.mp4'),
       },
       {
         type: 'steps',

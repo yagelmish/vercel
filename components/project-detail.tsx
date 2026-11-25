@@ -4,11 +4,13 @@ import { useState } from 'react'
 import { ArrowLeft, Play, Code as CodeIcon } from 'lucide-react'
 import { useLanguage } from '@/components/language-provider'
 import { getStableTextKey } from '@/lib/i18n'
+import { getMediaUrl } from '@/lib/media'
 import { projectCards, type ContentBlock } from '@/lib/portfolio-data'
 import { siteContent } from '@/lib/site-content'
 
 export function ProjectDetail({ projectId, onBack }: { projectId: string; onBack: () => void }) {
   const [videoLoaded, setVideoLoaded] = useState(true)
+  const [heroImageLoaded, setHeroImageLoaded] = useState(true)
   const { t } = useLanguage()
 
   const project = projectCards.find((p) => p.id === projectId)
@@ -44,7 +46,7 @@ export function ProjectDetail({ projectId, onBack }: { projectId: string; onBack
                   onError={() => setVideoLoaded(false)}
                   className="h-full w-full object-cover"
                 >
-                  <source src={block.url} type="video/mp4" />
+                  <source src={getMediaUrl(block.url)} type="video/mp4" />
                 </video>
               ) : (
                 <div className="flex h-full w-full flex-col items-center justify-center gap-3 p-6 text-center">
@@ -64,7 +66,7 @@ export function ProjectDetail({ projectId, onBack }: { projectId: string; onBack
             {block.title && <h3 className="text-2xl font-semibold text-white">{t(block.title)}</h3>}
             <div className="relative w-full overflow-hidden rounded-2xl border border-white/10 bg-[#0b0b0f] shadow-[0_0_30px_rgba(0,240,255,0.04)]">
               <img
-                src={block.url}
+                src={getMediaUrl(block.url)}
                 alt={block.alt ? t(block.alt) : block.title ? t(block.title) : title}
                 className="w-full h-auto object-cover"
               />
@@ -164,13 +166,16 @@ export function ProjectDetail({ projectId, onBack }: { projectId: string; onBack
       </div>
 
       {/* Hero Image */}
-      <div className="relative mb-14 h-[420px] w-full overflow-hidden rounded-2xl border border-white/10 bg-[#0b0b0f] shadow-[0_0_50px_rgba(0,240,255,0.04)] flex items-center justify-center group">
-        <img
-          src={project.image || `/images/${project.id}/hero.png`}
-          alt={title}
-          className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-        />
-      </div>
+      {heroImageLoaded && (
+        <div className="relative mb-14 h-[420px] w-full overflow-hidden rounded-2xl border border-white/10 bg-[#0b0b0f] shadow-[0_0_50px_rgba(0,240,255,0.04)] flex items-center justify-center group">
+          <img
+            src={getMediaUrl(project.image || `/images/${project.id}/hero.png`)}
+            alt={title}
+            onError={() => setHeroImageLoaded(false)}
+            className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+          />
+        </div>
+      )}
 
       {/* Dynamic Content Rendering */}
       <div className="grid gap-10 lg:grid-cols-3 border-t border-white/10 pt-12">

@@ -233,6 +233,7 @@ export const siteContent = {
       { en: 'MicroControllers', he: 'מיקרו-בקרים' },
       'ESP32',
       'Arduino',
+      'Raspberry Pi',
       'C / C++',
       'IoT',
       { en: 'Energy Harvesting', he: 'קצירת אנרגיה' },

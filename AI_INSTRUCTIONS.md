@@ -359,23 +359,26 @@ Do not perform unrelated refactors while adding a new block.
 
 ---
 
-## 12. Assets
+## 12. Assets & External Media Storage
 
-Use predictable asset conventions.
+Media assets (project images and video clips) are hosted externally on Cloudflare R2 under `MEDIA_BASE_URL` defined in `lib/media.ts`, and local `public/images/`, `public/clips/`, and `public/projects/` folders are ignored in `.gitignore`.
 
-Prefer project-specific assets to be named using the project ID or another stable identifier.
+Use `getMediaUrl(...)` from `lib/media.ts` for all project images and video URLs, and follow predictable asset path conventions inside the R2 `media/` bucket using the project ID:
 
-Example:
-
-```text
-public/images/project-id.png
-public/images/project-id-1.png
-public/images/project-id-2.png
-
-public/clips/project-id.mp4
+```ts
+image: getMediaUrl('/images/project-id/hero.png')
+url: getMediaUrl('/clips/project-id/demo.mp4')
 ```
 
-Do not create additional asset-management systems unless necessary.
+Example paths on external storage:
+
+```text
+media/images/project-id/hero.png
+media/images/project-id/project-id-1.png
+media/clips/project-id/demo.mp4
+```
+
+Do not commit large binary images/videos to `public/images/` or `public/clips/`, and do not hardcode the R2 domain repeatedly across project entries—always use `getMediaUrl(...)`.
 
 ---
 

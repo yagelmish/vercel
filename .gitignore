@@ -9,6 +9,11 @@ __v0_jsx-dev-runtime.ts
 # Environment variables
 .env*.local
 
+# Externalized media assets (hosted on Cloudflare R2)
+public/images/
+public/clips/
+public/projects/
+
 # Common ignores
 node_modules
 .next/
