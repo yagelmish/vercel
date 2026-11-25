@@ -24,7 +24,25 @@ export function ProjectDetail({ projectId, onBack }: { projectId: string; onBack
         return (
           <section key={index} className="space-y-4">
             {block.title && <h3 className="text-2xl font-semibold text-white">{t(block.title)}</h3>}
-            <p className="leading-relaxed text-slate-400">{t(block.content)}</p>
+            <p className="leading-relaxed text-slate-400 whitespace-pre-line">{t(block.content)}</p>
+            {block.bullets && block.bullets.length > 0 && (
+              <ul className="space-y-3 pt-1">
+                {block.bullets.map((bullet, i) => (
+                  <li
+                    key={i}
+                    className="flex items-start gap-3 rounded-xl border border-white/5 bg-white/[0.02] px-4 py-3 text-sm leading-relaxed text-slate-300"
+                  >
+                    <span className="mt-2 size-1.5 shrink-0 rounded-full bg-[#00f0ff] shadow-[0_0_8px_rgba(0,240,255,0.8)]" />
+                    <span>
+                      {bullet.title && (
+                        <strong className="font-semibold text-white">{t(bullet.title)}: </strong>
+                      )}
+                      <span className="text-slate-400">{t(bullet.text)}</span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
           </section>
         )
 
@@ -121,6 +139,29 @@ export function ProjectDetail({ projectId, onBack }: { projectId: string; onBack
               <pre className="overflow-x-auto whitespace-pre leading-relaxed">
                 <code>{block.code}</code>
               </pre>
+            </div>
+          </section>
+        )
+
+      case 'specs':
+        return (
+          <section key={index} className="space-y-4">
+            {block.title && <h3 className="text-2xl font-semibold text-white">{t(block.title)}</h3>}
+            {block.description && (
+              <p className="leading-relaxed text-slate-400">{t(block.description)}</p>
+            )}
+            <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] shadow-lg">
+              {block.rows.map((row, i) => (
+                <div
+                  key={i}
+                  className="grid gap-1.5 border-b border-white/5 px-5 py-3.5 text-sm last:border-b-0 sm:grid-cols-[210px_1fr] sm:items-baseline sm:gap-4"
+                >
+                  <span className="font-mono text-xs font-medium text-[#00f0ff]">
+                    {t(row.label)}
+                  </span>
+                  <span className="leading-relaxed text-slate-300">{t(row.value)}</span>
+                </div>
+              ))}
             </div>
           </section>
         )

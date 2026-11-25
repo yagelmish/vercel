@@ -143,11 +143,13 @@ Use the existing TypeScript types such as:
 * `Project`
 * `ContentBlock`
 * `TextBlock`
+* `TextBullet`
 * `VideoBlock`
 * `CodeBlock`
 * `StepsBlock`
 * `FeaturesBlock`
 * `ImageBlock`
+* `SpecsBlock`
 * `Locale`
 * `LocalizedString`
 * `LocalizableText`

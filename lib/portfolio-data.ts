@@ -5,15 +5,17 @@ import { getMediaUrl } from '@/lib/media'
 export type SectionId = 'overview' | 'projects' | 'resume' | (string & {});
 
 // --- 1. Content Block Definitions ---
-export type TextBlock = { type: 'text'; title?: LocalizedString; content: LocalizedString }
+export type TextBullet = { title?: LocalizedString; text: LocalizedString }
+export type TextBlock = { type: 'text'; title?: LocalizedString; content: LocalizedString; bullets?: TextBullet[] }
 export type VideoBlock = { type: 'video'; title?: LocalizedString; url: string }
 export type CodeBlock = { type: 'code'; title?: LocalizedString; language: string; code: string; description?: LocalizedString }
 export type StepsBlock = { type: 'steps'; title: LocalizedString; steps: { title: LocalizedString; description: LocalizedString }[] }
 export type FeaturesBlock = { type: 'features'; title: LocalizedString; features: LocalizedString[] }
 export type ImageBlock = { type: 'image'; title?: LocalizedString; url: string; alt?: LocalizedString }
+export type SpecsBlock = { type: 'specs'; title: LocalizedString; description?: LocalizedString; rows: { label: LocalizedString; value: LocalizedString }[] }
 
 // Union of supported blocks
-export type ContentBlock = TextBlock | VideoBlock | CodeBlock | StepsBlock | FeaturesBlock | ImageBlock;
+export type ContentBlock = TextBlock | VideoBlock | CodeBlock | StepsBlock | FeaturesBlock | ImageBlock | SpecsBlock;
 
 // --- 2. Project Interface ---
 export interface Project {
@@ -40,106 +42,234 @@ export const projectCards: Project[] = [
       he: 'IoT · קצירת אנרגיה · PCB',
     },
     title: {
-      en: 'SmartEC: Non-Invasive Smart Electricity Meter',
-      he: 'SmartEC: מונה חשמל חכם ללא פלישה ללוח',
+      en: 'SmartEC: Autonomous Non-Invasive Smart Electricity Meter',
+      he: 'SmartEC: מונה חשמל חכם, לא-פולשני ואוטונומי',
     },
     description: {
-      en: 'Battery-powered IoT smart electricity meter built around an ESP32-C3 and a custom energy-harvesting PCB. Reads optical meter pulses, harvests power via a clip-on CT clamp, buffers 48h telemetry in RTC memory, and streams over MQTTS to a self-hosted ThingsBoard server.',
-      he: 'מונה חשמל חכם מבוסס ESP32-C3 ו-PCB ייעודי עם קצירת אנרגיה. קורא פולסים אופטיים מהמונה, קוצר אנרגיה משנאי זרם לא-פולשני על הגיד, אוגר מדידות ל-48 שעות בזיכרון RTC ומשדר באופן מאובטח לשרת ThingsBoard עצמאי.',
+      en: 'Low-cost, one-time DIN-rail IoT meter reader for rental unit owners—requiring no electrician or panel power outlet. Harvests energy from a clip-on CT on the water-heater phase (SCT-013-000 + BQ25570) into an 800 mAh LiPo, reads internal optocoupler pulses, and runs at 45–60 µA in deep sleep.',
+      he: 'מערכת IoT זולה יחסית להתקנה חד-פעמית על פס DIN עבור בעלי יחידות דיור מושכרות — ללא חשמלאי וללא שקע בארון החשמל. קוצרת אנרגיה משנאי זרם על קו הדוד (SCT-013-000 + BQ25570) לסוללת 800mAh, קוראת פולסים מהאופטוקופלר של המונה, וצורכת 45–60 µA בשינה.',
     },
     pageDescription: {
-      en: 'An end-to-end hardware, firmware, and cloud IoT system engineered to bring remote real-time energy monitoring to private sub-meters in split apartments without modifying the electrical panel. Combines a custom EasyEDA energy-harvesting PCB, ultra-low-power ESP32-C3 SuperMini firmware with adaptive pulse calibration and 48-hour RTC batching, a dedicated UART diagnostic sniffer node, and a self-hosted ThingsBoard server.',
-      he: 'מערכת IoT שלמה מקצה לקצה (חומרה, קושחה וענן) שתוכננה להוסיף ניטור צריכת חשמל מרחוק בזמן אמת למוני חשמל פרטיים בדירות מחולקות ויחידות דיור — ללא כל שינוי במבנה לוח החשמל. הפרויקט משלב PCB ייעודי שתוכנן ב-EasyEDA לקצירת אנרגיה וסינון אותות, קושחת חיסכון-אנרגיה על גבי ESP32-C3 SuperMini עם כיול פולס אוטומטי ואגירת RTC ל-48 שעות, בקר Sniffer ייעודי לתיעוד UART, ושרת ThingsBoard עצמאי בענן.',
+      en: 'An autonomous, low-cost IoT hardware, firmware, and cloud system designed for owners of rented housing units to automate remote electricity meter reading—with a one-time DIN-rail installation and no electrician or panel outlet required. Powered inductively from a single clip-on CT on the phase wire (SCT-013-000 + BQ25570 + 800 mAh LiPo), it achieves a net-positive daily energy balance (+2 mV/day+), ~45–60 µA deep-sleep draw (~267 days without charging), custom 2-layer EasyEDA PCB design, and encrypted batch MQTTS telemetry to a self-hosted ThingsBoard server.',
+      he: 'מערכת IoT אוטונומית שלמה (חומרה, קושחה וענן) שפותחה עבור בעלי יחידות דיור מושכרות לביצוע קריאת מונים אוטומטית מרחוק — בעלות נמוכה יחסית ובהתקנה חד-פעמית בקופסה על פס DIN, ללא צורך בחשמלאי וללא שקע בארון החשמל. המערכת קוצרת אנרגיה השראתית משנאי זרם על גיד הפאזה (SCT-013-000 + BQ25570 + סוללת 800mAh), משיגה מאזן אנרגטי חיובי (+2mV ומעלה ליממה), צורכת 45–60 µA בשינה (~267 ימי גישור ללא טעינה), ומשדרת באצווה מאובטחת מ-PCB ייעודי אל שרת ThingsBoard עצמאי.',
     },
     tags: [
       'ESP32-C3',
+      'BQ25570 · SCT-013-000',
       { en: 'ENERGY HARVESTING', he: 'קצירת אנרגיה' },
       'EASYEDA PCB',
-      'MQTTS / THINGSBOARD',
-      'IOT',
+      'THINGSBOARD / MQTTS',
     ],
     icon: Zap,
-    glyph: 'ESP32-C3 · CT · MQTTS',
+    glyph: 'SCT-013 · BQ25570 · ESP32-C3',
     image: getMediaUrl('/images/smartec/hero.png'),
     contentBlocks: [
       {
         type: 'text',
-        title: { en: 'The Problem & Engineering Goal', he: 'הבעיה והיעד ההנדסי' },
+        title: {
+          en: 'The Problem: Remote Meter Reading Inside a Closed Panel',
+          he: 'הבעיה: קריאת מונים אוטומטית מתוך ארון חשמל סגור',
+        },
         content: {
-          en: 'Split apartments and housing units rely on private sub-meters inside the electrical panel that have no remote connectivity, forcing manual physical readings. The core goal was a zero-maintenance, plug-and-play device that installs without altering panel wiring—reading optical meter pulses passively while harvesting its own operating power directly from a clip-on Current Transformer (CT) around an existing conductor.',
-          he: 'בדירות מחולקות וביחידות דיור מותקנים לרוב מוני חשמל פרטיים בתוך הלוח ללא קישוריות מרחוק, מה שמחייב קריאה פיזית ידנית. היעד המרכזי היה לפתח מוצר להתקנה פשוטה עם אפס התעסקות שוטפת וללא שום שינוי במבנה לוח החשמל — קריאה פסיבית של פולסים אופטיים מהמונה, לצד קצירת אנרגיה עצמאית באמצעות קליפס שנאי זרם (CT) המתלבש על הגיד ומטעין סוללת LiPo.',
+          en: 'Owners of rented housing units and split apartments rely on private sub-meters inside the electrical panel that require periodic manual reading, while lacking an open user data port (like European P1 interfaces). Existing always-on Wi-Fi readers draw 50–80 mA continuously—hitting a simple physical wall: electrical panels rarely have a spare wall outlet, forcing external power wiring by an electrician or frequent battery swaps, alongside attenuated Wi-Fi behind metal doors.\n\nThe guiding goal of SmartEC was to build a relatively low-cost device for automated remote meter reading with a one-time DIN-rail installation that requires no electrician, reads pulses directly from the private sub-meter’s internal optocoupler, and powers itself indefinitely from inside the panel.',
+          he: 'בעלי יחידות דיור מושכרות ודירות מחולקות תלויים במוני חשמל פרטיים בתוך ארון החשמל, ללא יציאת נתונים פתוחה למשתמש (כמו יציאת P1 באירופה) — מה שמחייב קריאה פיזית ידנית. פתרונות Wi-Fi קיימים הפועלים ברציפות (Always-On) צורכים 50–80 mA ונתקעים מול מגבלת השטח הפשוטה ביותר: בארון החשמל אין שקע פנוי, מה שמחייב התעסקות של חשמלאי או החלפת סוללות תכופה, לצד הנחתת קליטה מאחורי דלת מתכתית.\n\nהמטרה שהנחתה את SmartEC הייתה ליצור מכשיר זול יחסית עבור בעלי יחידות דיור לביצוע קריאת מונים אוטומטית מרחוק, בקופסה על פס DIN ובהתקנה חד-פעמית שאינה מצריכה חשמלאי — קריאה ישירה מתוך האופטוקופלר הפנימי של המונה הפרטי והזנה עצמאית ללא התעסקות במתח חי.',
         },
       },
       {
         type: 'text',
-        title: { en: 'Hardware & Custom PCB Design', he: 'תכנון החומרה וה-PCB הייעודי' },
-        content: {
-          en: 'The custom PCB (designed in EasyEDA Pro) integrates three stages around an ESP32-C3 SuperMini: (1) a non-invasive CT energy-harvesting front-end with Schottky (1N5817) and DB107 bridge rectification feeding a BQ-series energy-harvesting charger module and LiPo battery; (2) a hardware RC low-pass filter (100 kΩ + 100 nF) conditioning the optical pulse input into GPIO 4; and (3) a high-impedance resistor divider on GPIO 0 (ADC1_CH0) for idle and RF-load battery voltage telemetry. Wi-Fi TX power is tuned to 8.5 dBm to prevent regulator brownout dips during TLS bursts.',
-          he: 'המעגל המודפס הייעודי (תוכנן ב-EasyEDA Pro) מאחד שלוש תתי-מערכות סביב בקר ESP32-C3 SuperMini: (1) דרגת קצירת אנרגיה לא-פולשנית הכוללת חיבור CT, יישור בדיודות שוטקי (1N5817) וגשרי יישור (DB107), קבלי סינון, מודול ניהול טעינה מסדרת BQ וסוללת LiPo; (2) מסנן RC חומרתי (100 kΩ + 100 nF) לייצוב וניקוי פולסי המונה בכניסה ל-GPIO 4; ו-(3) מחלק מתח בעכבה גבוהה על GPIO 0 (ADC1_CH0) לדגימת מתח סוללה במנוחה ותחת עומס שידור. עוצמת השידור הוגבלה ל-8.5 dBm למניעת נפילות מתח ברגולטור הזעיר.',
+        title: {
+          en: 'Hurdle 1: Current Source (CT) vs. Voltage-Source MPPT (BQ25570)',
+          he: 'אתגר 1: התנגשות פיזיקלית — שנאי זרם מול שבב MPPT',
         },
+        content: {
+          en: 'The energy subsystem pairs a split-core SCT-013-000 current transformer (1:2000 ratio, no internal burden resistor) clamped onto the water-heater phase wire with a TI BQ25570 (CJMCU-25570) harvesting into a 3.7 V, 800 mAh lithium battery. Because the BQ25570 was designed for voltage sources like solar cells, every 16 s it disconnects the load for 256 ms to sample open-circuit voltage (Voc). Unloading a current transformer drives an immediate voltage spike that exceeds the IC’s 5.5 V destruction threshold within seconds (before the CT’s internal ±7.5 V to ±22 V zeners clamp), while the ferrite core saturates above 1.5–2.0 V RMS (Xm ≈ 3,140 Ω at 50 Hz).',
+          he: 'לב מערכת האנרגיה מחבר שנאי זרם מתלבש מדגם SCT-013-000 (יחס 1:2000, ללא נגד עומס פנימי) על גיד הפאזה של דוד השמש אל שבב קצירת האנרגיה BQ25570 (מודול CJMCU-25570), הטוען סוללת ליתיום 3.7V בקיבולת 800mAh. הקושי ההנדסי הוא שה-BQ25570 תוכנן למקורות מתח כמו פאנלים סולאריים, ולכן כל 16 שניות הוא מנתק את העומס ל-256ms כדי לדגום את מתח המעגל הפתוח (Voc). ניתוק עומס משנאי זרם מקפיץ מיד את המתח מעבר לסף ההרס של השבב (5.5V) עוד לפני שהזנרים הפנימיים נפתחים (±7.5V עד ±22V), ובמקביל ליבת הפריט נכנסת לרוויה מגנטית מעל 1.5–2.0V RMS (Xm ≈ 3,140 Ω ב-50Hz).',
+        },
+        bullets: [
+          {
+            title: { en: 'Low-Drop Schottky Rectification', he: 'יישור דל-מפל' },
+            text: {
+              en: 'Replaced standard ~1.4 V silicon bridges with a 4× 1N5817 Schottky Graetz bridge (~0.22 V per diode), verified on the bench converting 550 mV AC into 330 mV DC.',
+              he: 'במקום גשר סיליקון סטנדרטי שהיה מפיל ~1.4V, נבנה גשר גרץ מארבע דיודות שוטקי 1N5817 עם מפל של ~0.22V לדיודה בלבד (אומת במדידה: 550mV AC מומרים ל-330mV DC).',
+            },
+          },
+          {
+            title: { en: 'MPPT-Calibrated Clamping Front-End', he: 'קטימת מתח שמכיילת את ה-MPPT' },
+            text: {
+              en: 'Two DB107 silicon bridges wired in series forward-biased (alongside a red status LED and 47 µF smoothing capacitor) clamp cleanly around 2.4–2.5 V. Since CJMCU-25570 is fixed at 80% MPPT, this protects the IC from overvoltage and pins operating voltage at ~1.9–2.0 V—right at peak power before core saturation.',
+              he: 'שני גשרי יישור סיליקון (DB107) חוברו בטור בקוטביות קדמית (לצד לד ו-47µF החלקה) ליצירת קטימה מדויקת סביב 2.4–2.5V. מכיוון ש-CJMCU-25570 מכויל קבוע ל-80% MPPT, הקטימה מגנה על השבב ובמקביל נועלת את מתח העבודה סביב 1.9–2.0V — בדיוק בנקודת ההספק המקסימלי לפני רוויית הליבה.',
+            },
+          },
+        ],
+      },
+      {
+        type: 'text',
+        title: {
+          en: 'Hurdle 2: Hunting Microamps to Reach Net-Positive Balance',
+          he: 'אתגר 2: המלחמה על המיקרו-אמפרים — לצוד זליגות סמויות',
+        },
+        content: {
+          en: 'Under a 10–12 A water heater load, the circuit harvests ~1.85–2.05 mA into the battery (~2.5–3.0 mAh per 1–1.5 h daily heating cycle). For net-positive autonomy, total average consumption had to fall well below 100 µA—yet early field runs showed 11–14 mV overnight voltage drops (~1.0–1.3 mA average draw). Systematic isolation revealed two hidden quiescent drains:',
+          he: 'כאשר דוד השמש פועל (10–12A), המערכת קוצרת לסוללה ~1.85–2.05mA — כלומר שעה עד שעה וחצי של דוד ביום מכניסות כ-2.5–3.0mAh. כדי לשמור על עודף אנרגטי, הצריכה הממוצעת של המעגל כולו חייבת לרדת מתחת ל-100µA. בניסויי השטח הראשונים נמדדה ירידת מתח לילית של 11–14mV (צריכה ממוצעת של ~1.0–1.3mA). חקירה שיטתית חשפה שני "גנבי אנרגיה" שקטים:',
+        },
+        bullets: [
+          {
+            title: { en: 'ESP32-C3 Onboard Power LED Removed', he: 'הסרת נורת ה-Power האדומה ב-ESP32-C3' },
+            text: {
+              en: 'The SuperMini’s red power LED alone drew 0.64–1.40 mA continuously—15× to 30× more than the rest of the sleeping system. Physically removing it extended standalone battery autonomy (zero charging) from ~24 days to ~267 days.',
+              he: 'נורת ה-Power על לוח ה-SuperMini משכה לבדה 0.64–1.40mA ברציפות — פי 15 עד 30 מכל שאר המערכת במצב שינה. הסרתה הפיזית האריכה את אוטונומיית הסוללה (ללא טעינה כלל) מכ-24 ימים לכ-267 ימים.',
+            },
+          },
+          {
+            title: { en: 'Disabling the BQ25570 Idle Buck Converter', he: 'ניתוק ממיר ה-Buck הפנימי של ה-BQ25570' },
+            text: {
+              en: 'Tying V_OK to V_EN kept the BQ25570’s internal Buck regulator idling at 200 µA constantly. Disconnecting V_EN and powering the ESP32-C3 directly from VBAT through its low-dropout LDO cut total sleep draw down to ~45–60 µA.',
+              he: 'חיבור פין V_OK אל V_EN השאיר את ממיר המתח הפנימי דולק בסרק וצרך 200µA קבועים. ניתוק V_EN והזנת ה-ESP32-C3 ישירות מהסוללה דרך מייצב ה-LDO הפנימי חתכו את זרם השינה הכולל ל-45–60 µA בלבד.',
+            },
+          },
+        ],
+      },
+      {
+        type: 'text',
+        title: {
+          en: 'Hurdle 3: Wi-Fi RF Stability, Brownouts & Batch Telemetry',
+          he: 'אתגר 3: יציבות שידור Wi-Fi, מניעת Brownout ואמינות נתונים',
+        },
+        content: {
+          en: 'Waking from deep sleep into Wi-Fi transmission drives sharp 150–250 mA current pulses that initially triggered brownout resets. Overnight logs also exposed missing early-morning samples (04:00–07:00)—a known SuperMini issue where the ceramic antenna sits adjacent to the 40 MHz crystal and disrupts RF lock at maximum TX power.',
+          he: 'במעבר משינה עמוקה לשידור Wi-Fi, צריכת ה-ESP32-C3 קופצת ממיקרו-אמפרים לפולסים חדים של 150–250mA שגרמו בתחילה לאתחולי נפילת מתח (Brownout). בנוסף, מדידות לילה גילו אובדן דגימות בשעות הקרות לפנות בוקר (04:00–07:00), תופעה מוכרת בלוחות SuperMini שבהם האנטנה הקרמית צמודה לגביש ה-40MHz ומשבשת את נעילת ה-RF בהספק שידור מרבי.',
+        },
+        bullets: [
+          {
+            title: { en: 'Local 220 µF Bulk Cap + 8.5 dBm TX Cap', he: 'קבל גיבוי 220µF + כיול הספק שידור ל-8.5dBm' },
+            text: {
+              en: 'Placed a 220 µF capacitor directly across the ESP32-C3 supply pins to absorb RF transients, and capped TX power at WIFI_POWER_8_5dBm—eliminating crystal interference and cutting peak TX current nearly in half (~250 mA → ~130 mA).',
+              he: 'הוצב קבל 220µF בצמוד לפיני ההזנה לספיגת פולסי ה-RF, והגבלת המשדר ל-WIFI_POWER_8_5dBm העלימה את הפרעות ה-RF לגביש וחתכה את זרם השיא בכמעט חצי (מ-~250mA ל-~130mA).',
+            },
+          },
+          {
+            title: { en: 'RTC Batching & MQTTS to Self-Hosted ThingsBoard', he: 'אגירת RTC ל-48 שעות ושידור מרוכז ל-ThingsBoard' },
+            text: {
+              en: 'Eliminated silent MQTT drops by expanding PubSubClient’s buffer to 8 KB, flushing client.loop(), and disconnecting cleanly before sleep. Waking hourly for <10 ms with Wi-Fi OFF to log NTP-timestamped HourlyRecord structs in RTC_DATA_ATTR—then transmitting every 12 hours to a self-hosted ThingsBoard VM—cuts up to 95% of Wi-Fi energy and prevents data loss during outages.',
+              he: 'נפתרו נפילות שקטות של חבילות MQTT ע"י הגדלת חוצץ PubSubClient ל-8KB, קריאות client.loop() וניתוק יזום לפני שינה. הבקר מתעורר מדי שעה עם רדיו כבוי לפחות מ-10ms לשמירת דגימות ב-RTC_DATA_ATTR עם חותמת זמן NTP, ומשדר מרוכז כל 12 שעות אל שרת ThingsBoard עצמאי בענן — מה שחוסך עד 95% מאנרגיית ה-Wi-Fi ומונע אובדן מידע בניתוקי רשת.',
+            },
+          },
+        ],
       },
       {
         type: 'steps',
-        title: { en: 'System Architecture & Development Journey', he: 'ארכיטקטורת המערכת ותהליך הפיתוח' },
+        title: {
+          en: 'From Prototype to Custom PCB & End-to-End Architecture',
+          he: 'מאב-טיפוס ל-PCB ייעודי וארכיטקטורת המערכת',
+        },
         steps: [
           {
             title: {
-              en: 'Captive Portal & Adaptive Pulse Calibration',
-              he: 'פורטל הגדרה וכיול אוטומטי של אורך הפולס',
+              en: 'Custom 2-Layer EasyEDA PCB & RF Keepout (In Fabrication)',
+              he: 'תכנון PCB דו-שכבתי ב-EasyEDA ואזור Keepout ל-RF (הודפס וממתין להגעה)',
             },
             description: {
-              en: 'On initial setup (or BOOT button trigger), the device launches a SmartMeter-Setup Captive Portal (192.168.4.1). A live test measures two consecutive optical pulse widths via microsecond interrupts, automatically computes optimal debounce (pulse width + 30 ms), and lets the installer configure meter constants (e.g., 100 Imp/kWh for NISKO) and starting kWh reading.',
-              he: 'בהתקנה ראשונית (או בלחיצת כפתור BOOT) הבקר פותח פורטל הגדרה מקומי (Captive Portal בכתובת 192.168.4.1). בדיקת תקינות חיה מודדת שני פולסים רצופים ברזולוציית מיקרו-שניות, מחשבת אוטומטית את זמן סינון הרעשים האופטימלי (אורך הפולס + 30ms), ומאפשרת הזנת קבוע המונה (כגון 100 Imp/kWh במוני NISKO) וסנכרון קריאת הפתיחה.',
+              en: 'Converted the validated prototype into smartMeterPCB in EasyEDA Pro (Through-Hole components for easy assembly inside a DIN-rail housing, with JLCPCB Gerbers). Rotated the ESP32-C3 90° so the ceramic antenna sits over a dual-layer copper-free RF Keepout zone, accommodated CJMCU-25570’s mixed 3.50 mm / 2.54 mm pin pitch, and added a manual TX trigger on GPIO 5. The PCB has been fabricated and is awaiting delivery.',
+              he: 'האב-טיפוס הומר ללוח מודפס ייעודי (smartMeterPCB) ב-EasyEDA Pro ברכיבי Through-Hole נוחים להרכבה בתוך קופסת פס DIN (עם קובצי Gerber ל-JLCPCB). בקר ה-ESP32-C3 סובב ב-90° מעל אזור Keepout נקי מנחושת בשתי השכבות, טופלו מרווחי הרגליים השונים של מודול ה-CJMCU-25570 (3.50mm מול 2.54mm), ונוסף כפתור שידור ידני על GPIO 5. הלוח כבר הודפס וממתין להגעה להרכבה סופית.',
             },
           },
           {
             title: {
-              en: 'Ultra-Low-Power Deep Sleep & Pulse Counting',
-              he: 'ספירת פולסים מדויקת בשינה עמוקה (Deep Sleep)',
+              en: 'Optocoupler Pulse Conditioning & Dual Battery Protection',
+              he: 'קליטת פולסים מהאופטוקופלר והגנת סוללה דו-שכבתית',
             },
             description: {
-              en: 'Migrated from dual-core ESP32-WROOM to ESP32-C3 SuperMini for lower sleep power. Routine pulse wakeups on GPIO 4 bypass Serial initialization, ADC sampling, and floating-point math entirely—incrementing RTC memory, waiting for physical pulse settle, and returning directly to deep sleep.',
-              he: 'הפרויקט עבר מ-ESP32-WROOM דו-ליבתי אל ESP32-C3 SuperMini לצמצום צריכת הזרם. התעוררות מפולס שגרתי ב-GPIO 4 מדלגת לחלוטין על אתחול Serial, דגימות ADC וחישובי float — סופרת בזיכרון ה-RTC, ממתינה לסיום הפולס הפיזי וחוזרת מיידית לשינה עמוקה.',
+              en: 'The private sub-meter’s internal optocoupler output connects to GPIO 4 (RTC wakeup) through a hardware RC filter (series resistor + 100 nF ceramic cap) against panel EMI and bounce. BQ25570 enforces hardware overcharge stop (4.07 V) and V_OK (2.85 V), while firmware samples an ADC1 divider on GPIO 0 via eFuse-calibrated analogReadMilliVolts() (±5–15 mV accuracy in ~4 ms) and skips Wi-Fi transmission below 3.2 V.',
+              he: 'יציאת האופטוקופלר הפנימית של המונה הפרטי מחוברת ל-GPIO 4 דרך מסנן RC חומרתי (נגד טורי + קבל קרמי 100nF) לסינון הפרעות אלקטרומגנטיות ו-Bounce. ה-BQ25570 מגן בחומרה (עצירת טעינה ב-4.07V ודגל V_OK ב-2.85V), ובמקביל הקושחה דוגמת מחלק מתח ב-GPIO 0 באמצעות כיול eFuse הפנימי (analogReadMilliVolts, דיוק ±5–15mV ב-4ms בלבד) ומדלגת על שידור מתחת ל-3.2V.',
             },
           },
           {
             title: {
-              en: '48-Hour RTC Batch Buffering & Flash Backup',
-              he: 'אגירת נתונים ב-RTC ל-48 שעות וגיבוי ל-Flash',
+              en: 'Captive Portal & Dynamic Pulse Calibration (SmartMeter-Setup)',
+              he: 'פורטל הגדרה מובנה וכיול אוטומטי של אורך הפולס',
             },
             description: {
-              en: 'Every hour, the firmware wakes from an RTC timer to log a 16-byte HourlyRecord (Unix timestamp, cumulative kWh, average watts, battery voltage) into an RTC buffer holding up to 48 hours and backs up pulse counts to NVS Flash. Wi-Fi turns on only once every 12 hours (or via manual TX button on GPIO 5) to transmit in a single batch.',
-              he: 'מדי שעה הבקר מתעורר מטיימר RTC, דוגם מתח סוללה במנוחה, מתעד רשומת HourlyRecord בת 16 בתים (חותמת זמן, קוט"ש מצטבר, הספק ממוצע ומתח סוללה) בבאפר RTC של עד 48 שעות, ומגבה מונה פולסים ל-Flash. מודם ה-Wi-Fi מופעל רק פעם ב-12 שעות (או בלחיצת שידור ידני ב-GPIO 5).',
+              en: 'On first boot or BOOT press, launches SmartMeter-Setup (192.168.4.1). A live test measures two consecutive optocoupler pulse widths via microsecond interrupts, sets adaptive debounce (pulse width + 30 ms), and configures per-meter Imp/kWh constants (e.g., 100 Imp/kWh for NISKO) plus starting kWh synchronization.',
+              he: 'בהתקנה ראשונית או לחיצת BOOT נפתח פורטל SmartMeter-Setup (בכתובת 192.168.4.1). בדיקת חיבור חיה מודדת שני פולסים רצופים ברזולוציית מיקרו-שניות, קובעת זמן סינון רעשים מותאם (אורך הפולס + 30ms), ומאפשרת הזנת קבוע המונה (כגון 100 Imp/kWh במוני NISKO) וסנכרון קריאה התחלתית.',
             },
           },
           {
             title: {
-              en: 'Self-Hosted ThingsBoard Cloud over MQTTS',
-              he: 'מעבר מ-Blynk לשרת ThingsBoard עצמאי ב-MQTTS',
+              en: 'Companion UART Diagnostic Sniffer (logger_c3) & Lab Stress Tests',
+              he: 'בקר Sniffer פסיבי לדיבאגינג בשטח ובדיקות מעבדה',
             },
             description: {
-              en: 'To eliminate commercial IoT SaaS costs and maintain full control, the backend was migrated from Blynk to a self-hosted open-source ThingsBoard instance on a Google Cloud VM. Devices auto-provision secure credentials, sync time via NTP, and publish batch JSON arrays over encrypted MQTTS (port 8883).',
-              he: 'כדי לחסוך עלויות פלטפורמות IoT ולשלוט בתשתית, המערכת הועברה מ-Blynk לשרת ThingsBoard קוד פתוח שהוקם על VM בענן של Google. הבקר מבצע הקצאה אוטומטית (Auto-Provisioning) של טוקן מאובטח, מסנכרן זמן מול NTP ומשדר מערכי JSON מרוכזים ב-MQTTS מוצפן (פורט 8883).',
+              en: 'Built a companion ESP32-C3 logger (80 MHz, Wi-Fi off by default) that passively sniffs UART logs, strips Espressif ROM bootloader noise, persists up to 1.5 MB of wakeup sessions to LittleFS, and exposes a toggleable Wi-Fi web console. Validated with 100-pulse accuracy benchmarks, <80 ms bounce injection, mid-TX network drops, and power-loss Flash tests.',
+              he: 'פותח בקר לוגר משלים (ESP32-C3 ב-80MHz, Wi-Fi כבוי כברירת מחדל) המאזין פסיבית לקו ה-UART, מסנן רעשי Bootloader, שומר עד 1.5MB ב-LittleFS ופותח ממשק Web ב-Wi-Fi בלחיצת כפתור. המערכת אומתה בבדיקות דיוק 100 פולסים, הזרקת רעשים מתחת ל-80ms, ניתוקי רשת באמצע שידור והפסקות מתח בזמן כתיבה ל-Flash.',
+            },
+          },
+        ],
+      },
+      {
+        type: 'specs',
+        title: {
+          en: 'Technical Specifications & Field Validation',
+          he: 'מפרט טכני ותוצאות אימות בשטח',
+        },
+        description: {
+          en: 'Full 24-hour field trials confirmed a net-positive energy balance—1 to 1.5 hours of daily water heater usage covers the entire 24-hour system budget and yields a net battery gain of +2 mV/day or more.',
+          he: 'ניסויי שטח לאורך מחזורי יממה שלמים הוכיחו שהמערכת מתייצבת על מאזן אנרגטי חיובי (Net Positive) — שעה עד שעה וחצי של הפעלת דוד שמש ביום מכסות את צריכת היממה כולה ומייצרות עלייה נטו של מתח הסוללה (+2mV ומעלה ליממה).',
+        },
+        rows: [
+          {
+            label: { en: 'MCU & Communication', he: 'בקר ותקשורת' },
+            value: {
+              en: 'ESP32-C3 SuperMini, TX-limited Wi-Fi (8.5 dBm), MQTTS (port 8883) to self-hosted ThingsBoard',
+              he: 'ESP32-C3 SuperMini, Wi-Fi בהספק מבוקר (8.5dBm), תקשורת MQTTS לשרת ThingsBoard עצמאי',
             },
           },
           {
-            title: {
-              en: 'Dedicated UART Diagnostic Sniffer Node',
-              he: 'בקר Sniffer ייעודי לדיבאגינג ותיעוד בשטח',
-            },
-            description: {
-              en: 'Built a companion firmware (logger_c3) on a second ESP32-C3 running at 80 MHz with Wi-Fi off by default. It passively captures UART logs from the meter node, strips Espressif ROM bootloader noise, persists useful wakeup sessions to LittleFS (up to 1.5 MB), and exposes a toggleable Wi-Fi AP web console for field diagnostics.',
-              he: 'פותחה קושחה נלווית (logger_c3) לבקר ESP32-C3 נוסף הפועל בתדר 80MHz עם Wi-Fi כבוי כברירת מחדל. הלוגר מאזין פסיבית לקו ה-UART של בקר המונה, מסנן רעשי Bootloader של Espressif, שומר סשנים רלוונטיים ב-LittleFS (עד 1.5MB) ומאפשר פתיחת ממשק Web ב-Wi-Fi בלחיצת כפתור לצפייה בלוגים בשטח.',
+            label: { en: 'Energy Source', he: 'מקור אנרגיה' },
+            value: {
+              en: 'SCT-013-000 split-core CT (1:2000) on water-heater phase — zero contact with live AC conductors',
+              he: 'שנאי זרם SCT-013-000 (1:2000) על פאזת הדוד — ללא מגע במוליך חי',
             },
           },
           {
-            title: {
-              en: 'Lab Stress Testing & Edge-Case Hardening',
-              he: 'בדיקות מעבדה קשיחות וטיפול במקרי קצה',
+            label: { en: 'Harvesting & Clamping Stage', he: 'דרגת קצירה וייצוב' },
+            value: {
+              en: '4× 1N5817 Schottky bridge, 2× DB107 clamping + 47 µF cap, TI BQ25570 (CJMCU-25570)',
+              he: 'גשר שוטקי 4×1N5817, קטימת 2×DB107 + קבל 47µF, בקר BQ25570',
             },
-            description: {
-              en: 'Validated against 100-pulse accuracy benchmarks (1.000 kWh), sub-80 ms bounce bursts, maximum pulse-rate saturation, repeated deep-sleep single-pulse wakes, Wi-Fi/internet drops mid-transmission, and power cuts during Flash writes and sleep cycles.',
-              he: 'המערכת נבחנה מול תרחישי מעבדה ומקרי קצה: בדיקת דיוק 100 פולסים (1.000 kWh), הזרקת רעשים מתחת ל-80ms, עומסי קצב פולסים גבוהים, מאות התעוררויות Deep Sleep, ניתוק Wi-Fi/אינטרנט באמצע שידור והפסקות מתח בזמן כתיבה ל-Flash ובזמן שינה.',
+          },
+          {
+            label: { en: 'Storage & Protection', he: 'מאגר אנרגיה והגנה' },
+            value: {
+              en: '3.7 V LiPo (800 mAh), 220 µF local cap, HW V_OK (2.85 V) / stop (4.07 V) + FW ADC cutoff (3.2 V)',
+              he: 'סוללת LiPo 3.7V (800mAh), קבל גיבוי 220µF, הגנת V_OK (2.85V) + סף ADC תוכנתי (3.2V)',
+            },
+          },
+          {
+            label: { en: 'Harvesting Rate (Heater ON)', he: 'קצב טעינה (דוד פעיל)' },
+            value: {
+              en: '~1.85–2.05 mA (~2.5–3.0 mAh per average 1–1.5 h daily cycle)',
+              he: '~1.85mA–2.05mA (כ-2.5mAh–3.0mAh ליום עבודה ממוצע)',
+            },
+          },
+          {
+            label: { en: 'Average Sleep Current', he: 'צריכת שינה ממוצעת' },
+            value: {
+              en: '~45–60 µA (after removing onboard Power LED and disconnecting internal Buck)',
+              he: '~45µA–60µA (לאחר הסרת נורת ה-Power וניתוק ממיר ה-Buck הפנימי)',
+            },
+          },
+          {
+            label: { en: 'Zero-Charge Autonomy', he: 'עמידות ללא טעינה' },
+            value: {
+              en: '~267 days continuous operation on the 800 mAh battery alone',
+              he: 'כ-267 ימי עבודה רצופים על סוללת ה-800mAh כמאגר גישור',
+            },
+          },
+          {
+            label: { en: 'Hardware & Enclosure', he: 'תכנון חומרה ומארז' },
+            value: {
+              en: 'Custom 2-layer EasyEDA Pro PCB with RF Keepout & RC pulse filter, built for DIN-rail enclosure',
+              he: 'PCB דו-שכבתי ייעודי ב-EasyEDA Pro עם אזור Keepout ל-RF ומסנן RC לפולסים, בקופסה לפס DIN',
             },
           },
         ],
@@ -186,13 +316,14 @@ void IRAM_ATTR onPulse()
         type: 'features',
         title: { en: 'Key Features', he: 'מאפיינים מרכזיים' },
         features: [
-          { en: 'Non-invasive CT energy harvesting + LiPo', he: 'קצירת אנרגיה לא-פולשנית מ-CT + סוללת LiPo' },
-          { en: 'Custom EasyEDA PCB with RC pulse filter', he: 'PCB ייעודי ב-EasyEDA כולל מסנן RC לפולסים' },
-          { en: 'Auto-calibrated pulse-width debounce', he: 'כיול אוטומטי של זמן סינון רעשים לפי אורך פולס' },
-          { en: 'ESP32-C3 deep sleep & 48h RTC batching', he: 'שינה עמוקה ב-ESP32-C3 ואגירת RTC ל-48 שעות' },
-          { en: 'Self-hosted ThingsBoard MQTTS (port 8883)', he: 'שרת ThingsBoard עצמאי בתקשורת MQTTS מאובטחת' },
-          { en: 'Captive Portal setup & dynamic Imp/kWh', he: 'פורטל הגדרה מובנה עם תמיכה בקבועי Imp/kWh' },
-          { en: 'Companion LittleFS UART diagnostic sniffer', he: 'בקר Sniffer משלים לתיעוד לוגים ודיאגנוסטיקה בשטח' },
+          { en: 'No electrician or panel outlet required (DIN-rail)', he: 'ללא חשמלאי וללא שקע בארון החשמל (פס DIN)' },
+          { en: 'SCT-013-000 + BQ25570 phase energy harvesting', he: 'קצירת אנרגיה מפאזה: SCT-013-000 + BQ25570' },
+          { en: '45–60 µA sleep draw (~267 days no-charge runtime)', he: 'צריכת שינה 45–60 µA (~267 ימים ללא טעינה)' },
+          { en: 'Net-positive daily energy balance (+2 mV/day+)', he: 'מאזן אנרגטי יומי חיובי (+2mV ומעלה ליממה)' },
+          { en: 'Reads internal optocoupler + HW RC filter', he: 'קריאה מאופטוקופלר פנימי + מסנן RC חומרתי' },
+          { en: 'Custom 2-layer EasyEDA PCB with RF Keepout', he: 'PCB דו-שכבתי ייעודי ב-EasyEDA עם RF Keepout' },
+          { en: '48h RTC batching to self-hosted ThingsBoard', he: 'אגירת RTC ל-48 שעות ושידור MQTTS ל-ThingsBoard' },
+          { en: 'Captive Portal auto-calibration + UART sniffer', he: 'כיול פולס אוטומטי בפורטל + בקר Sniffer לדיבאג' },
         ],
       },
     ],
