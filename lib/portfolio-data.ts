@@ -42,8 +42,8 @@ export const projectCards: Project[] = [
       he: 'IoT · קצירת אנרגיה · PCB',
     },
     title: {
-      en: 'SmartEC: Autonomous Non-Invasive Smart Electricity Meter',
-      he: 'SmartEC: מונה חשמל חכם, לא-פולשני ואוטונומי',
+      en: 'SmartEC: Automated Meter Reader for Landlords',
+      he: 'SmartEC: קורא מוני חשמל אוטומטי לבעלי דירות מושכרות',
     },
     description: {
       en: 'Low-cost, one-time DIN-rail IoT meter reader for rental unit owners—requiring no electrician or panel power outlet. Harvests energy from a clip-on CT on the water-heater phase (SCT-013-000 + BQ25570) into an 800 mAh LiPo, reads internal optocoupler pulses, and runs at 45–60 µA in deep sleep.',
@@ -67,12 +67,23 @@ export const projectCards: Project[] = [
       {
         type: 'text',
         title: {
-          en: 'The Problem: Remote Meter Reading Inside a Closed Panel',
-          he: 'הבעיה: קריאת מונים אוטומטית מתוך ארון חשמל סגור',
+          en: 'The Need: Eliminating Monthly Tenant Meter Chasing',
+          he: 'הצורך: סוף לבקשות הקריאה החודשיות מהשוכר',
         },
         content: {
-          en: 'Owners of rented housing units and split apartments rely on private sub-meters inside the electrical panel that require periodic manual reading, while lacking an open user data port (like European P1 interfaces). Existing always-on Wi-Fi readers draw 50–80 mA continuously—hitting a simple physical wall: electrical panels rarely have a spare wall outlet, forcing external power wiring by an electrician or frequent battery swaps, alongside attenuated Wi-Fi behind metal doors.\n\nThe guiding goal of SmartEC was to build a relatively low-cost device for automated remote meter reading with a one-time DIN-rail installation that requires no electrician, reads pulses directly from the private sub-meter’s internal optocoupler, and powers itself indefinitely from inside the panel.',
-          he: 'בעלי יחידות דיור מושכרות ודירות מחולקות תלויים במוני חשמל פרטיים בתוך ארון החשמל, ללא יציאת נתונים פתוחה למשתמש (כמו יציאת P1 באירופה) — מה שמחייב קריאה פיזית ידנית. פתרונות Wi-Fi קיימים הפועלים ברציפות (Always-On) צורכים 50–80 mA ונתקעים מול מגבלת השטח הפשוטה ביותר: בארון החשמל אין שקע פנוי, מה שמחייב התעסקות של חשמלאי או החלפת סוללות תכופה, לצד הנחתת קליטה מאחורי דלת מתכתית.\n\nהמטרה שהנחתה את SmartEC הייתה ליצור מכשיר זול יחסית עבור בעלי יחידות דיור לביצוע קריאת מונים אוטומטית מרחוק, בקופסה על פס DIN ובהתקנה חד-פעמית שאינה מצריכה חשמלאי — קריאה ישירה מתוך האופטוקופלר הפנימי של המונה הפרטי והזנה עצמאית ללא התעסקות במתח חי.',
+          en: 'Landlords of rented apartments and split housing units typically have to ask their tenants for a manual electricity meter reading every single month—a tedious, friction-filled routine that depends on reminders, photos, and manual billing.\n\nThe goal of SmartEC was to build a product that removes that burden completely through automated remote reading. Unlike existing off-the-shelf smart meters or commercial telemetry gateways, SmartEC is designed so anyone can install it in minutes inside a DIN-rail box—without hiring an electrician—and at a fraction of the cost of commercial shelf products.',
+          he: 'בעלי דירות מושכרות ויחידות דיור נדרשים מדי חודש לבקש מהשוכר לצלם או לשלוח את קריאת מונה החשמל — תהליך מתיש, מסורבל ותלוי בתזכורות חוזרות משני הצדדים.\n\nהמטרה של SmartEC היא לחסוך לחלוטין את הצורך הזה באמצעות קריאת מונים אוטומטית מרחוק. בשונה ממוצרי מדף קיימים בשוק שדורשים בעל מקצוע או עלויות גבוהות, המערכת תוכננה כך שכל אחד יוכל להתקין אותה בעצמו בהתקנה חד-פעמית על פס DIN — ללא צורך בחשמלאי ובמחיר זול משמעותית ביחס לפתרונות המדף.',
+        },
+      },
+      {
+        type: 'text',
+        title: {
+          en: 'The Engineering Problem: Autonomous Power & Bulletproof Accuracy',
+          he: 'הבעיה ההנדסית: אספקת אנרגיה עצמאית ומדידה אמינה ומדויקת',
+        },
+        content: {
+          en: 'Designing for a DIY, electrician-free installation creates two core engineering problems that standard ESPHome/Wi-Fi readers (which draw 50–80 mA continuously) cannot solve:\n\n1. Powering the hardware without tapping live mains: Because the installer must never touch 230 V panel wiring—and Israeli electrical panels rarely have a free outlet—the system has to harvest its own energy non-invasively from inside the panel and survive on ultra-low quiescent power.\n2. Ultra-reliable, accurate metering and transmission: Every pulse from the private sub-meter’s internal optocoupler must be captured with zero false counts and zero missed pulses across deep-sleep wakeups, electromagnetic panel noise, power interruptions, and attenuated Wi-Fi behind metal cabinet doors.',
+          he: 'הדרישה להתקנה פשוטה ללא חשמלאי מייצרת שתי בעיות הנדסיות מרכזיות שפתרונות Wi-Fi רגילים (שצורכים 50–80mA ברציפות) לא פותרים:\n\n1. השגת אנרגיה ללא חיבור לרשת החשמל: מכיוון שאסור לחבר את המוצר ישירות לקווי מתח חי בארון החשמל (ובארון גם אין שקע פנוי), המערכת חייבת לקצור אנרגיה באופן לא-פולשני מתוך הארון עצמו ולעבוד במאזן אנרגטי חיובי על סוללה.\n2. מעקב מונה ושידור אמינים ומדויקים ביותר: קליטת כל פולס ופולס מהאופטוקופלר הפנימי של המונה הפרטי ללא כפילויות וללא פספוסים — גם מול רעשים אלקטרומגנטיים בלוח, מחזורי Deep Sleep, הפסקות חשמל וקליטת Wi-Fi מוחלשת מאחורי דלת ארון מתכתית.',
         },
       },
       {
