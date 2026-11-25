@@ -57,7 +57,8 @@ export function ResumeSection() {
       </div>
 
       <a
-        href="#"
+        href={t(siteContent.resume.resumeUrl)}
+        download={t(siteContent.resume.resumeFileName)}
         className="mt-10 inline-flex items-center gap-2 rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-accent-foreground transition-shadow hover:shadow-[0_0_20px] hover:shadow-accent/40"
       >
         <Download className="size-4" />
@@ -102,8 +103,15 @@ function ContactRow({
   const className =
     'flex items-center gap-3 rounded-xl border border-border bg-card/40 p-4 backdrop-blur-sm transition-colors'
 
+  const isExternal = href?.startsWith('http')
+
   return href ? (
-    <a href={href} className={`${className} hover:border-accent/40`}>
+    <a
+      href={href}
+      target={isExternal ? '_blank' : undefined}
+      rel={isExternal ? 'noopener noreferrer' : undefined}
+      className={`${className} hover:border-accent/40`}
+    >
       {content}
     </a>
   ) : (
