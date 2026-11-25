@@ -111,8 +111,8 @@ export const siteContent = {
       he: 'סטודנט לתואר ראשון (B.Sc.) בהנדסת חשמל ואלקטרוניקה',
     },
     bio: {
-      en: 'I am an undergraduate student at Ariel University, specializing in low-level software and digital systems. My technical focus includes C programming, Assembly, hardware description languages (HDL), and microcontrollers. I am currently seeking a student or junior engineering position to apply my hands-on project experience within a dynamic R&D team.',
-      he: 'אני סטודנט לתואר ראשון באוניברסיטת אריאל, המתמחה בתוכנה ברמה נמוכה (Low-Level) ובמערכות ספרתיות. תחומי ההתמקדות הטכניים שלי כוללים תכנות בשפת C, שפת סף (Assembly), שפות תיאור חומרה (HDL) ומיקרו-בקרים. בימים אלה אני מחפש משרת סטודנט או תפקיד מהנדס ג\'וניור כדי ליישם את הניסיון המעשי שצברתי בפרויקטים במסגרת צוות מו"פ דינמי.',
+      en: 'I am a second-year Electrical and Electronics Engineering undergraduate student at Ariel University, focusing on hardware, embedded systems, and IoT. My hands-on experience includes custom PCB design (EasyEDA), microcontroller development (ESP32), energy harvesting, and sensor integration. I am currently seeking a student engineering position (available 2–3 days a week) to contribute my practical prototyping and hardware integration skills within a dynamic R&D team.',
+      he: 'אני סטודנט שנה ב׳ לתואר ראשון בהנדסת חשמל ואלקטרוניקה באוניברסיטת אריאל, המתמקד בחומרה, מערכות משובצות (Embedded) ו-IoT. הניסיון המעשי שלי כולל תכנון מעגלים מודפסים מותאמים אישית (EasyEDA), פיתוח על גבי מיקרו-בקרים (ESP32), קצירת אנרגיה ושילוב חיישנים. בימים אלה אני מחפש משרת סטודנט בהנדסה (זמינות של 2–3 ימים בשבוע) כדי לתרום מכישורי הפרוטוטייפינג והאינטגרציה שלי במסגרת צוות מו״פ דינמי.',
     },
     location: {
       en: 'Israel',
@@ -126,19 +126,19 @@ export const siteContent = {
       {
         label: { en: 'Focus', he: 'תחום התמקדות' },
         value: {
-          en: 'Low-Level Software & Digital Systems',
-          he: 'תוכנה ברמה נמוכה ומערכות ספרתיות',
+          en: 'Hardware, Microcontrollers & PCB Design',
+          he: 'חומרה, מיקרו-בקרים ועריכת מעגלים מודפסים',
         },
       },
       {
-        label: { en: 'Languages', he: 'שפות' },
-        value: 'C · Assembly · HDL',
+        label: { en: 'Skills', he: 'כישורים' },
+        value: 'C · C++ · EasyEDA · uC · Prototyping',
       },
       {
         label: { en: 'Hardware', he: 'חומרה' },
         value: {
-          en: 'Arduino & Microcontrollers',
-          he: 'Arduino ומיקרו-בקרים',
+          en: 'ESP32, IoT, Energy Harvesting & Sensors',
+          he: 'ESP32, IoT, קצירת אנרגיה וחיישנים',
         },
       },
       {
