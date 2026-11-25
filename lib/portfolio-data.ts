@@ -1,4 +1,4 @@
-import { Cpu, Code, Lock, type LucideIcon } from 'lucide-react'
+import { Cpu, Code, Lock, Zap, type LucideIcon } from 'lucide-react'
 import type { LocalizableText, LocalizedString } from '@/lib/i18n'
 import { getMediaUrl } from '@/lib/media'
 
@@ -32,6 +32,171 @@ export interface Project {
 
 // --- 3. Portfolio Projects Repository (Single Source of Truth) ---
 export const projectCards: Project[] = [
+  {
+    id: 'smartec',
+    category: 'hardware',
+    label: {
+      en: 'IOT · ENERGY HARVESTING · PCB',
+      he: 'IoT · קצירת אנרגיה · PCB',
+    },
+    title: {
+      en: 'SmartEC: Non-Invasive Smart Electricity Meter',
+      he: 'SmartEC: מונה חשמל חכם ללא פלישה ללוח',
+    },
+    description: {
+      en: 'Battery-powered IoT smart electricity meter built around an ESP32-C3 and a custom energy-harvesting PCB. Reads optical meter pulses, harvests power via a clip-on CT clamp, buffers 48h telemetry in RTC memory, and streams over MQTTS to a self-hosted ThingsBoard server.',
+      he: 'מונה חשמל חכם מבוסס ESP32-C3 ו-PCB ייעודי עם קצירת אנרגיה. קורא פולסים אופטיים מהמונה, קוצר אנרגיה משנאי זרם לא-פולשני על הגיד, אוגר מדידות ל-48 שעות בזיכרון RTC ומשדר באופן מאובטח לשרת ThingsBoard עצמאי.',
+    },
+    pageDescription: {
+      en: 'An end-to-end hardware, firmware, and cloud IoT system engineered to bring remote real-time energy monitoring to private sub-meters in split apartments without modifying the electrical panel. Combines a custom EasyEDA energy-harvesting PCB, ultra-low-power ESP32-C3 SuperMini firmware with adaptive pulse calibration and 48-hour RTC batching, a dedicated UART diagnostic sniffer node, and a self-hosted ThingsBoard server.',
+      he: 'מערכת IoT שלמה מקצה לקצה (חומרה, קושחה וענן) שתוכננה להוסיף ניטור צריכת חשמל מרחוק בזמן אמת למוני חשמל פרטיים בדירות מחולקות ויחידות דיור — ללא כל שינוי במבנה לוח החשמל. הפרויקט משלב PCB ייעודי שתוכנן ב-EasyEDA לקצירת אנרגיה וסינון אותות, קושחת חיסכון-אנרגיה על גבי ESP32-C3 SuperMini עם כיול פולס אוטומטי ואגירת RTC ל-48 שעות, בקר Sniffer ייעודי לתיעוד UART, ושרת ThingsBoard עצמאי בענן.',
+    },
+    tags: [
+      'ESP32-C3',
+      { en: 'ENERGY HARVESTING', he: 'קצירת אנרגיה' },
+      'EASYEDA PCB',
+      'MQTTS / THINGSBOARD',
+      'IOT',
+    ],
+    icon: Zap,
+    glyph: 'ESP32-C3 · CT · MQTTS',
+    image: getMediaUrl('/images/smartec/hero.png'),
+    contentBlocks: [
+      {
+        type: 'text',
+        title: { en: 'The Problem & Engineering Goal', he: 'הבעיה והיעד ההנדסי' },
+        content: {
+          en: 'Split apartments and housing units rely on private sub-meters inside the electrical panel that have no remote connectivity, forcing manual physical readings. The core goal was a zero-maintenance, plug-and-play device that installs without altering panel wiring—reading optical meter pulses passively while harvesting its own operating power directly from a clip-on Current Transformer (CT) around an existing conductor.',
+          he: 'בדירות מחולקות וביחידות דיור מותקנים לרוב מוני חשמל פרטיים בתוך הלוח ללא קישוריות מרחוק, מה שמחייב קריאה פיזית ידנית. היעד המרכזי היה לפתח מוצר להתקנה פשוטה עם אפס התעסקות שוטפת וללא שום שינוי במבנה לוח החשמל — קריאה פסיבית של פולסים אופטיים מהמונה, לצד קצירת אנרגיה עצמאית באמצעות קליפס שנאי זרם (CT) המתלבש על הגיד ומטעין סוללת LiPo.',
+        },
+      },
+      {
+        type: 'text',
+        title: { en: 'Hardware & Custom PCB Design', he: 'תכנון החומרה וה-PCB הייעודי' },
+        content: {
+          en: 'The custom PCB (designed in EasyEDA Pro) integrates three stages around an ESP32-C3 SuperMini: (1) a non-invasive CT energy-harvesting front-end with Schottky (1N5817) and DB107 bridge rectification feeding a BQ-series energy-harvesting charger module and LiPo battery; (2) a hardware RC low-pass filter (100 kΩ + 100 nF) conditioning the optical pulse input into GPIO 4; and (3) a high-impedance resistor divider on GPIO 0 (ADC1_CH0) for idle and RF-load battery voltage telemetry. Wi-Fi TX power is tuned to 8.5 dBm to prevent regulator brownout dips during TLS bursts.',
+          he: 'המעגל המודפס הייעודי (תוכנן ב-EasyEDA Pro) מאחד שלוש תתי-מערכות סביב בקר ESP32-C3 SuperMini: (1) דרגת קצירת אנרגיה לא-פולשנית הכוללת חיבור CT, יישור בדיודות שוטקי (1N5817) וגשרי יישור (DB107), קבלי סינון, מודול ניהול טעינה מסדרת BQ וסוללת LiPo; (2) מסנן RC חומרתי (100 kΩ + 100 nF) לייצוב וניקוי פולסי המונה בכניסה ל-GPIO 4; ו-(3) מחלק מתח בעכבה גבוהה על GPIO 0 (ADC1_CH0) לדגימת מתח סוללה במנוחה ותחת עומס שידור. עוצמת השידור הוגבלה ל-8.5 dBm למניעת נפילות מתח ברגולטור הזעיר.',
+        },
+      },
+      {
+        type: 'steps',
+        title: { en: 'System Architecture & Development Journey', he: 'ארכיטקטורת המערכת ותהליך הפיתוח' },
+        steps: [
+          {
+            title: {
+              en: 'Captive Portal & Adaptive Pulse Calibration',
+              he: 'פורטל הגדרה וכיול אוטומטי של אורך הפולס',
+            },
+            description: {
+              en: 'On initial setup (or BOOT button trigger), the device launches a SmartMeter-Setup Captive Portal (192.168.4.1). A live test measures two consecutive optical pulse widths via microsecond interrupts, automatically computes optimal debounce (pulse width + 30 ms), and lets the installer configure meter constants (e.g., 100 Imp/kWh for NISKO) and starting kWh reading.',
+              he: 'בהתקנה ראשונית (או בלחיצת כפתור BOOT) הבקר פותח פורטל הגדרה מקומי (Captive Portal בכתובת 192.168.4.1). בדיקת תקינות חיה מודדת שני פולסים רצופים ברזולוציית מיקרו-שניות, מחשבת אוטומטית את זמן סינון הרעשים האופטימלי (אורך הפולס + 30ms), ומאפשרת הזנת קבוע המונה (כגון 100 Imp/kWh במוני NISKO) וסנכרון קריאת הפתיחה.',
+            },
+          },
+          {
+            title: {
+              en: 'Ultra-Low-Power Deep Sleep & Pulse Counting',
+              he: 'ספירת פולסים מדויקת בשינה עמוקה (Deep Sleep)',
+            },
+            description: {
+              en: 'Migrated from dual-core ESP32-WROOM to ESP32-C3 SuperMini for lower sleep power. Routine pulse wakeups on GPIO 4 bypass Serial initialization, ADC sampling, and floating-point math entirely—incrementing RTC memory, waiting for physical pulse settle, and returning directly to deep sleep.',
+              he: 'הפרויקט עבר מ-ESP32-WROOM דו-ליבתי אל ESP32-C3 SuperMini לצמצום צריכת הזרם. התעוררות מפולס שגרתי ב-GPIO 4 מדלגת לחלוטין על אתחול Serial, דגימות ADC וחישובי float — סופרת בזיכרון ה-RTC, ממתינה לסיום הפולס הפיזי וחוזרת מיידית לשינה עמוקה.',
+            },
+          },
+          {
+            title: {
+              en: '48-Hour RTC Batch Buffering & Flash Backup',
+              he: 'אגירת נתונים ב-RTC ל-48 שעות וגיבוי ל-Flash',
+            },
+            description: {
+              en: 'Every hour, the firmware wakes from an RTC timer to log a 16-byte HourlyRecord (Unix timestamp, cumulative kWh, average watts, battery voltage) into an RTC buffer holding up to 48 hours and backs up pulse counts to NVS Flash. Wi-Fi turns on only once every 12 hours (or via manual TX button on GPIO 5) to transmit in a single batch.',
+              he: 'מדי שעה הבקר מתעורר מטיימר RTC, דוגם מתח סוללה במנוחה, מתעד רשומת HourlyRecord בת 16 בתים (חותמת זמן, קוט"ש מצטבר, הספק ממוצע ומתח סוללה) בבאפר RTC של עד 48 שעות, ומגבה מונה פולסים ל-Flash. מודם ה-Wi-Fi מופעל רק פעם ב-12 שעות (או בלחיצת שידור ידני ב-GPIO 5).',
+            },
+          },
+          {
+            title: {
+              en: 'Self-Hosted ThingsBoard Cloud over MQTTS',
+              he: 'מעבר מ-Blynk לשרת ThingsBoard עצמאי ב-MQTTS',
+            },
+            description: {
+              en: 'To eliminate commercial IoT SaaS costs and maintain full control, the backend was migrated from Blynk to a self-hosted open-source ThingsBoard instance on a Google Cloud VM. Devices auto-provision secure credentials, sync time via NTP, and publish batch JSON arrays over encrypted MQTTS (port 8883).',
+              he: 'כדי לחסוך עלויות פלטפורמות IoT ולשלוט בתשתית, המערכת הועברה מ-Blynk לשרת ThingsBoard קוד פתוח שהוקם על VM בענן של Google. הבקר מבצע הקצאה אוטומטית (Auto-Provisioning) של טוקן מאובטח, מסנכרן זמן מול NTP ומשדר מערכי JSON מרוכזים ב-MQTTS מוצפן (פורט 8883).',
+            },
+          },
+          {
+            title: {
+              en: 'Dedicated UART Diagnostic Sniffer Node',
+              he: 'בקר Sniffer ייעודי לדיבאגינג ותיעוד בשטח',
+            },
+            description: {
+              en: 'Built a companion firmware (logger_c3) on a second ESP32-C3 running at 80 MHz with Wi-Fi off by default. It passively captures UART logs from the meter node, strips Espressif ROM bootloader noise, persists useful wakeup sessions to LittleFS (up to 1.5 MB), and exposes a toggleable Wi-Fi AP web console for field diagnostics.',
+              he: 'פותחה קושחה נלווית (logger_c3) לבקר ESP32-C3 נוסף הפועל בתדר 80MHz עם Wi-Fi כבוי כברירת מחדל. הלוגר מאזין פסיבית לקו ה-UART של בקר המונה, מסנן רעשי Bootloader של Espressif, שומר סשנים רלוונטיים ב-LittleFS (עד 1.5MB) ומאפשר פתיחת ממשק Web ב-Wi-Fi בלחיצת כפתור לצפייה בלוגים בשטח.',
+            },
+          },
+          {
+            title: {
+              en: 'Lab Stress Testing & Edge-Case Hardening',
+              he: 'בדיקות מעבדה קשיחות וטיפול במקרי קצה',
+            },
+            description: {
+              en: 'Validated against 100-pulse accuracy benchmarks (1.000 kWh), sub-80 ms bounce bursts, maximum pulse-rate saturation, repeated deep-sleep single-pulse wakes, Wi-Fi/internet drops mid-transmission, and power cuts during Flash writes and sleep cycles.',
+              he: 'המערכת נבחנה מול תרחישי מעבדה ומקרי קצה: בדיקת דיוק 100 פולסים (1.000 kWh), הזרקת רעשים מתחת ל-80ms, עומסי קצב פולסים גבוהים, מאות התעוררויות Deep Sleep, ניתוק Wi-Fi/אינטרנט באמצע שידור והפסקות מתח בזמן כתיבה ל-Flash ובזמן שינה.',
+            },
+          },
+        ],
+      },
+      {
+        type: 'code',
+        title: {
+          en: 'Core Firmware: RTC Batch Record & Adaptive Pulse ISR',
+          he: 'ליבת הקושחה: מבנה האגירה ב-RTC ופסיקת פולסים מותאמת',
+        },
+        description: {
+          en: 'Excerpt from src/main_c3.cpp showing persistent RTC telemetry structs and calibrated ISR debouncing',
+          he: 'קטע מקורי מתוך src/main_c3.cpp המציג את אגירת הרשומות בזיכרון ה-RTC ופסיקת החומרה המכוילת',
+        },
+        language: 'C++ / PlatformIO (ESP32-C3)',
+        code: `struct HourlyRecord
+{
+  uint32_t ts_epoch_sec; // Unix timestamp (seconds)
+  float total_kwh;       // Cumulative meter reading (kWh)
+  float avg_power_watts; // Average power in interval (W)
+  float battery_voltage; // Battery voltage sample (V)
+};
+
+RTC_DATA_ATTR volatile uint32_t pulse_count = 0;
+RTC_DATA_ATTR uint16_t pulses_per_kwh_rtc = 100;
+RTC_DATA_ATTR uint32_t debounce_time_ms = 80;
+RTC_DATA_ATTR HourlyRecord rtc_records[MAX_HOURLY_RECORDS];
+RTC_DATA_ATTR uint8_t rtc_records_count = 0;
+
+void IRAM_ATTR onPulse()
+{
+  if (!pulse_interrupt_enabled)
+    return;
+
+  uint32_t now = millis();
+  if (now - last_isr_millis > debounce_time_ms)
+  {
+    last_isr_millis = now;
+    pulse_count++;
+  }
+}`,
+      },
+      {
+        type: 'features',
+        title: { en: 'Key Features', he: 'מאפיינים מרכזיים' },
+        features: [
+          { en: 'Non-invasive CT energy harvesting + LiPo', he: 'קצירת אנרגיה לא-פולשנית מ-CT + סוללת LiPo' },
+          { en: 'Custom EasyEDA PCB with RC pulse filter', he: 'PCB ייעודי ב-EasyEDA כולל מסנן RC לפולסים' },
+          { en: 'Auto-calibrated pulse-width debounce', he: 'כיול אוטומטי של זמן סינון רעשים לפי אורך פולס' },
+          { en: 'ESP32-C3 deep sleep & 48h RTC batching', he: 'שינה עמוקה ב-ESP32-C3 ואגירת RTC ל-48 שעות' },
+          { en: 'Self-hosted ThingsBoard MQTTS (port 8883)', he: 'שרת ThingsBoard עצמאי בתקשורת MQTTS מאובטחת' },
+          { en: 'Captive Portal setup & dynamic Imp/kWh', he: 'פורטל הגדרה מובנה עם תמיכה בקבועי Imp/kWh' },
+          { en: 'Companion LittleFS UART diagnostic sniffer', he: 'בקר Sniffer משלים לתיעוד לוגים ודיאגנוסטיקה בשטח' },
+        ],
+      },
+    ],
+  },
   /*
   {
     id: 'hdl',
