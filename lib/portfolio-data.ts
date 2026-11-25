@@ -32,6 +32,7 @@ export interface Project {
 
 // --- 3. Portfolio Projects Repository (Single Source of Truth) ---
 export const projectCards: Project[] = [
+  /*
   {
     id: 'hdl',
     category: 'hardware',
@@ -100,6 +101,7 @@ export const projectCards: Project[] = [
       },
     ],
   },
+  */
   {
     id: 'apple-pay-tracker',
     category: 'software',
