@@ -50,8 +50,8 @@ export const projectCards: Project[] = [
       he: 'מערכת IoT זולה יחסית להתקנה חד-פעמית על פס DIN עבור בעלי יחידות דיור מושכרות — ללא חשמלאי וללא שקע בארון החשמל. קוצרת אנרגיה משנאי זרם על קו הדוד (SCT-013-000 + BQ25570) לסוללת 800mAh, קוראת פולסים מהאופטוקופלר של המונה, וצורכת 45–60 µA בשינה.',
     },
     pageDescription: {
-      en: 'An autonomous, low-cost IoT hardware, firmware, and cloud system designed for owners of rented housing units to automate remote electricity meter reading—with a one-time DIN-rail installation and no electrician or panel outlet required. Powered inductively from a single clip-on CT on the phase wire (SCT-013-000 + BQ25570 + 800 mAh LiPo), it achieves a net-positive daily energy balance (+2 mV/day+), ~45–60 µA deep-sleep draw (~267 days without charging), custom 2-layer EasyEDA PCB design, and encrypted batch MQTTS telemetry to a self-hosted ThingsBoard server.',
-      he: 'מערכת IoT אוטונומית שלמה (חומרה, קושחה וענן) שפותחה עבור בעלי יחידות דיור מושכרות לביצוע קריאת מונים אוטומטית מרחוק — בעלות נמוכה יחסית ובהתקנה חד-פעמית בקופסה על פס DIN, ללא צורך בחשמלאי וללא שקע בארון החשמל. המערכת קוצרת אנרגיה השראתית משנאי זרם על גיד הפאזה (SCT-013-000 + BQ25570 + סוללת 800mAh), משיגה מאזן אנרגטי חיובי (+2mV ומעלה ליממה), צורכת 45–60 µA בשינה (~267 ימי גישור ללא טעינה), ומשדרת באצווה מאובטחת מ-PCB ייעודי אל שרת ThingsBoard עצמאי.',
+      en: 'An autonomous, low-cost IoT device that brings automated remote electricity meter reading to rental units—with a one-time installation that requires no electrician and no wall outlet in the panel. Powered by harvesting energy directly from the phase wire, it runs maintenance-free and streams usage straight to the cloud.',
+      he: 'מכשיר IoT עצמאי וזול יחסית המיועד לבעלי דירות מושכרות, ומאפשר קריאת מוני חשמל אוטומטית מרחוק בהתקנה חד-פעמית ללא חשמלאי וללא שקע בארון החשמל. המערכת קוצרת אנרגיה ישירות מגיד הפאזה, פועלת לאורך זמן ללא תחזוקה ומשדרת את נתוני הצריכה ישירות לענן.',
     },
     tags: [
       'ESP32-C3',
@@ -93,25 +93,43 @@ export const projectCards: Project[] = [
           he: 'אתגר 1: התנגשות פיזיקלית — שנאי זרם מול שבב MPPT',
         },
         content: {
-          en: 'The energy subsystem pairs a split-core SCT-013-000 current transformer (1:2000 ratio, no internal burden resistor) clamped onto the water-heater phase wire with a TI BQ25570 (CJMCU-25570) harvesting into a 3.7 V, 800 mAh lithium battery. Because the BQ25570 was designed for voltage sources like solar cells, every 16 s it disconnects the load for 256 ms to sample open-circuit voltage (Voc). Unloading a current transformer drives an immediate voltage spike that exceeds the IC’s 5.5 V destruction threshold within seconds (before the CT’s internal ±7.5 V to ±22 V zeners clamp), while the ferrite core saturates above 1.5–2.0 V RMS (Xm ≈ 3,140 Ω at 50 Hz).',
-          he: 'לב מערכת האנרגיה מחבר שנאי זרם מתלבש מדגם SCT-013-000 (יחס 1:2000, ללא נגד עומס פנימי) על גיד הפאזה של דוד השמש אל שבב קצירת האנרגיה BQ25570 (מודול CJMCU-25570), הטוען סוללת ליתיום 3.7V בקיבולת 800mAh. הקושי ההנדסי הוא שה-BQ25570 תוכנן למקורות מתח כמו פאנלים סולאריים, ולכן כל 16 שניות הוא מנתק את העומס ל-256ms כדי לדגום את מתח המעגל הפתוח (Voc). ניתוק עומס משנאי זרם מקפיץ מיד את המתח מעבר לסף ההרס של השבב (5.5V) עוד לפני שהזנרים הפנימיים נפתחים (±7.5V עד ±22V), ובמקביל ליבת הפריט נכנסת לרוויה מגנטית מעל 1.5–2.0V RMS (Xm ≈ 3,140 Ω ב-50Hz).',
+          en: 'The energy subsystem pairs a split-core SCT-013-000 current transformer (1:2000 ratio, no internal burden resistor) clamped onto the water-heater phase wire with a TI BQ25570 (CJMCU-25570) harvesting into a 3.7 V, 800 mAh lithium battery. Because the BQ25570 was designed for voltage sources like solar cells, every 16 s it disconnects the load for 256 ms to sample open-circuit voltage (Voc). Unloading a current transformer drives an immediate voltage spike that exceeds the IC’s 5.5 V destruction threshold within seconds (before the CT’s internal ±7.5 V to ±22 V zeners clamp), while the ferrite core saturates above 1.5–2.0 V RMS (Xm ≈ 3,140 Ω at 50 Hz).\n\nThe solution — a custom-designed front-end stage:',
+          he: 'לב מערכת האנרגיה מחבר שנאי זרם מתלבש מדגם SCT-013-000 (יחס 1:2000, ללא נגד עומס פנימי) על גיד הפאזה של דוד השמש אל שבב קצירת האנרגיה BQ25570 (מודול CJMCU-25570), הטוען סוללת ליתיום 3.7V בקיבולת 800mAh. הקושי ההנדסי הוא שה-BQ25570 תוכנן למקורות מתח כמו פאנלים סולאריים, ולכן כל 16 שניות הוא מנתק את העומס ל-256ms כדי לדגום את מתח המעגל הפתוח (Voc). ניתוק עומס משנאי זרם מקפיץ מיד את המתח מעבר לסף ההרס של השבב (5.5V) עוד לפני שהזנרים הפנימיים נפתחים (±7.5V עד ±22V), ובמקביל ליבת הפריט נכנסת לרוויה מגנטית מעל 1.5–2.0V RMS (Xm ≈ 3,140 Ω ב-50Hz).\n\nהפתרון לבעיה — דרגת כניסה מותאמת אישית:',
         },
         bullets: [
           {
-            title: { en: 'Low-Drop Schottky Rectification', he: 'יישור דל-מפל' },
+            title: {
+              en: 'Solution 1 — Low-Drop Schottky Rectification',
+              he: 'פתרון 1 — יישור דל-מפל',
+            },
             text: {
               en: 'Replaced standard ~1.4 V silicon bridges with a 4× 1N5817 Schottky Graetz bridge (~0.22 V per diode), verified on the bench converting 550 mV AC into 330 mV DC.',
               he: 'במקום גשר סיליקון סטנדרטי שהיה מפיל ~1.4V, נבנה גשר גרץ מארבע דיודות שוטקי 1N5817 עם מפל של ~0.22V לדיודה בלבד (אומת במדידה: 550mV AC מומרים ל-330mV DC).',
             },
           },
           {
-            title: { en: 'MPPT-Calibrated Clamping Front-End', he: 'קטימת מתח שמכיילת את ה-MPPT' },
+            title: {
+              en: 'Solution 2 — Dual-Purpose Voltage Clamping & MPPT Lock',
+              he: 'פתרון 2 — קטימת מתח, נעילת MPPT ויעילות כפולה עם נורת הלד',
+            },
             text: {
-              en: 'Two DB107 silicon bridges wired in series forward-biased (alongside a red status LED and 47 µF smoothing capacitor) clamp cleanly around 2.4–2.5 V. Since CJMCU-25570 is fixed at 80% MPPT, this protects the IC from overvoltage and pins operating voltage at ~1.9–2.0 V—right at peak power before core saturation.',
-              he: 'שני גשרי יישור סיליקון (DB107) חוברו בטור בקוטביות קדמית (לצד לד ו-47µF החלקה) ליצירת קטימה מדויקת סביב 2.4–2.5V. מכיוון ש-CJMCU-25570 מכויל קבוע ל-80% MPPT, הקטימה מגנה על השבב ובמקביל נועלת את מתח העבודה סביב 1.9–2.0V — בדיוק בנקודת ההספק המקסימלי לפני רוויית הליבה.',
+              en: 'Two DB107 silicon bridges wired in series forward-biased alongside a red LED and 47 µF smoothing capacitor clamp voltage cleanly around 2.4–2.5 V. Since CJMCU-25570 is fixed at 80% MPPT, this protects the IC from overvoltage and locks operating voltage at ~1.9–2.0 V right before core saturation. Using the LED achieves double efficiency: it acts directly as part of the voltage-clamping diode path while simultaneously serving as a live visual indicator that the harvesting/charging circuit is active.',
+              he: 'שני גשרי יישור סיליקון (DB107) חוברו בטור בקוטביות קדמית לצד נורת LED אדומה וקבל החלקה של 47µF ליצירת קטימה מדויקת סביב 2.4–2.5V. מכיוון שמודול CJMCU-25570 מכויל קבוע ל-80% MPPT, הקטימה מגנה על השבב משריפה ונועלת את מתח העבודה סביב 1.9–2.0V — בדיוק בנקודת ההספק המקסימלי לפני רוויית הליבה. שילוב נורת הלד מעניק יעילות כפולה: היא משמשת גם כדיודה קוטמת מתח במעגל ההגנה, וגם כחיווי ויזואלי מיידי לכך שמעגל הטעינה נמצא בפעולה.',
             },
           },
         ],
+      },
+      {
+        type: 'image',
+        title: {
+          en: 'Rectification & Clamping Stage (Breadboard Test)',
+          he: 'דרגת היישור וקטימת המתח (בדיקה על מטריצה)',
+        },
+        url: getMediaUrl('/images/smart-meter/diode-bridge.png'),
+        alt: {
+          en: 'Custom 1N5817 Schottky bridge and DB107 voltage clamping circuit with LED indicator',
+          he: 'גשר שוטקי 1N5817 ומעגל קטימת המתח עם DB107 ונורת הלד',
+        },
       },
       {
         type: 'text',
@@ -120,19 +138,25 @@ export const projectCards: Project[] = [
           he: 'אתגר 2: המלחמה על המיקרו-אמפרים — לצוד זליגות סמויות',
         },
         content: {
-          en: 'Under a 10–12 A water heater load, the circuit harvests ~1.85–2.05 mA into the battery (~2.5–3.0 mAh per 1–1.5 h daily heating cycle). For net-positive autonomy, total average consumption had to fall well below 100 µA—yet early field runs showed 11–14 mV overnight voltage drops (~1.0–1.3 mA average draw). Systematic isolation revealed two hidden quiescent drains:',
-          he: 'כאשר דוד השמש פועל (10–12A), המערכת קוצרת לסוללה ~1.85–2.05mA — כלומר שעה עד שעה וחצי של דוד ביום מכניסות כ-2.5–3.0mAh. כדי לשמור על עודף אנרגטי, הצריכה הממוצעת של המעגל כולו חייבת לרדת מתחת ל-100µA. בניסויי השטח הראשונים נמדדה ירידת מתח לילית של 11–14mV (צריכה ממוצעת של ~1.0–1.3mA). חקירה שיטתית חשפה שני "גנבי אנרגיה" שקטים:',
+          en: 'Under a 10–12 A water heater load, the circuit harvests ~1.85–2.05 mA into the battery (~2.5–3.0 mAh per 1–1.5 h daily heating cycle). For net-positive autonomy, total average consumption had to fall well below 100 µA—yet early field runs showed 11–14 mV overnight voltage drops (~1.0–1.3 mA average draw). Systematic isolation revealed two hidden quiescent drains.\n\nThe solution — eliminating both quiescent drains:',
+          he: 'כאשר דוד השמש פועל (10–12A), המערכת קוצרת לסוללה ~1.85–2.05mA — כלומר שעה עד שעה וחצי של דוד ביום מכניסות כ-2.5–3.0mAh. כדי לשמור על עודף אנרגטי, הצריכה הממוצעת של המעגל כולו חייבת לרדת מתחת ל-100µA. בניסויי השטח הראשונים נמדדה ירידת מתח לילית של 11–14mV (צריכה ממוצעת של ~1.0–1.3mA) לאחר שהתגלו שני "גנבי אנרגיה" שקטים.\n\nהפתרון לבעיה — נטרול שתי הזליגות:',
         },
         bullets: [
           {
-            title: { en: 'ESP32-C3 Onboard Power LED Removed', he: 'הסרת נורת ה-Power האדומה ב-ESP32-C3' },
+            title: {
+              en: 'Solution 1 — Removing the ESP32-C3 Onboard Power LED',
+              he: 'פתרון 1 — הסרת נורת ה-Power האדומה ב-ESP32-C3',
+            },
             text: {
               en: 'The SuperMini’s red power LED alone drew 0.64–1.40 mA continuously—15× to 30× more than the rest of the sleeping system. Physically removing it extended standalone battery autonomy (zero charging) from ~24 days to ~267 days.',
               he: 'נורת ה-Power על לוח ה-SuperMini משכה לבדה 0.64–1.40mA ברציפות — פי 15 עד 30 מכל שאר המערכת במצב שינה. הסרתה הפיזית האריכה את אוטונומיית הסוללה (ללא טעינה כלל) מכ-24 ימים לכ-267 ימים.',
             },
           },
           {
-            title: { en: 'Disabling the BQ25570 Idle Buck Converter', he: 'ניתוק ממיר ה-Buck הפנימי של ה-BQ25570' },
+            title: {
+              en: 'Solution 2 — Disabling the BQ25570 Idle Buck Converter',
+              he: 'פתרון 2 — ניתוק ממיר ה-Buck הפנימי של ה-BQ25570',
+            },
             text: {
               en: 'Tying V_OK to V_EN kept the BQ25570’s internal Buck regulator idling at 200 µA constantly. Disconnecting V_EN and powering the ESP32-C3 directly from VBAT through its low-dropout LDO cut total sleep draw down to ~45–60 µA.',
               he: 'חיבור פין V_OK אל V_EN השאיר את ממיר המתח הפנימי דולק בסרק וצרך 200µA קבועים. ניתוק V_EN והזנת ה-ESP32-C3 ישירות מהסוללה דרך מייצב ה-LDO הפנימי חתכו את זרם השינה הכולל ל-45–60 µA בלבד.',
@@ -141,25 +165,43 @@ export const projectCards: Project[] = [
         ],
       },
       {
+        type: 'image',
+        title: {
+          en: 'Working Harvesting & ESP32-C3 Prototype',
+          he: 'אב-הטיפוס הפעיל: קצירת אנרגיה, טעינה ובקר ESP32-C3',
+        },
+        url: getMediaUrl('/images/smart-meter/prototype.png'),
+        alt: {
+          en: 'SmartEC prototype with SCT-013-000 CT, BQ25570 charger, 800 mAh LiPo battery, and ESP32-C3',
+          he: 'אב-טיפוס SmartEC הכולל שנאי זרם SCT-013-000, רכיב BQ25570, סוללת 800mAh ובקר ESP32-C3',
+        },
+      },
+      {
         type: 'text',
         title: {
           en: 'Hurdle 3: Wi-Fi RF Stability, Brownouts & Batch Telemetry',
           he: 'אתגר 3: יציבות שידור Wi-Fi, מניעת Brownout ואמינות נתונים',
         },
         content: {
-          en: 'Waking from deep sleep into Wi-Fi transmission drives sharp 150–250 mA current pulses that initially triggered brownout resets. Overnight logs also exposed missing early-morning samples (04:00–07:00)—a known SuperMini issue where the ceramic antenna sits adjacent to the 40 MHz crystal and disrupts RF lock at maximum TX power.',
-          he: 'במעבר משינה עמוקה לשידור Wi-Fi, צריכת ה-ESP32-C3 קופצת ממיקרו-אמפרים לפולסים חדים של 150–250mA שגרמו בתחילה לאתחולי נפילת מתח (Brownout). בנוסף, מדידות לילה גילו אובדן דגימות בשעות הקרות לפנות בוקר (04:00–07:00), תופעה מוכרת בלוחות SuperMini שבהם האנטנה הקרמית צמודה לגביש ה-40MHz ומשבשת את נעילת ה-RF בהספק שידור מרבי.',
+          en: 'Waking from deep sleep into Wi-Fi transmission drives sharp 150–250 mA current pulses that initially triggered brownout resets. Overnight logs also exposed missing early-morning samples (04:00–07:00)—a known SuperMini issue where the ceramic antenna sits adjacent to the 40 MHz crystal and disrupts RF lock at maximum TX power.\n\nThe solution — combined hardware & firmware hardening:',
+          he: 'במעבר משינה עמוקה לשידור Wi-Fi, צריכת ה-ESP32-C3 קופצת ממיקרו-אמפרים לפולסים חדים של 150–250mA שגרמו בתחילה לאתחולי נפילת מתח (Brownout). בנוסף, מדידות לילה גילו אובדן דגימות בשעות הקרות לפנות בוקר (04:00–07:00), תופעה מוכרת בלוחות SuperMini שבהם האנטנה הקרמית צמודה לגביש ה-40MHz ומשבשת את נעילת ה-RF בהספק שידור מרבי.\n\nהפתרון לבעיה — שילוב חומרה וקושחה יחד:',
         },
         bullets: [
           {
-            title: { en: 'Local 220 µF Bulk Cap + 8.5 dBm TX Cap', he: 'קבל גיבוי 220µF + כיול הספק שידור ל-8.5dBm' },
+            title: {
+              en: 'Solution 1 — Local 220 µF Bulk Cap + 8.5 dBm TX Cap',
+              he: 'פתרון 1 — קבל גיבוי 220µF + כיול הספק שידור ל-8.5dBm',
+            },
             text: {
               en: 'Placed a 220 µF capacitor directly across the ESP32-C3 supply pins to absorb RF transients, and capped TX power at WIFI_POWER_8_5dBm—eliminating crystal interference and cutting peak TX current nearly in half (~250 mA → ~130 mA).',
               he: 'הוצב קבל 220µF בצמוד לפיני ההזנה לספיגת פולסי ה-RF, והגבלת המשדר ל-WIFI_POWER_8_5dBm העלימה את הפרעות ה-RF לגביש וחתכה את זרם השיא בכמעט חצי (מ-~250mA ל-~130mA).',
             },
           },
           {
-            title: { en: 'RTC Batching & MQTTS to Self-Hosted ThingsBoard', he: 'אגירת RTC ל-48 שעות ושידור מרוכז ל-ThingsBoard' },
+            title: {
+              en: 'Solution 2 — RTC Batching & MQTTS to Self-Hosted ThingsBoard',
+              he: 'פתרון 2 — אגירת RTC ל-48 שעות ושידור מרוכז ל-ThingsBoard',
+            },
             text: {
               en: 'Eliminated silent MQTT drops by expanding PubSubClient’s buffer to 8 KB, flushing client.loop(), and disconnecting cleanly before sleep. Waking hourly for <10 ms with Wi-Fi OFF to log NTP-timestamped HourlyRecord structs in RTC_DATA_ATTR—then transmitting every 12 hours to a self-hosted ThingsBoard VM—cuts up to 95% of Wi-Fi energy and prevents data loss during outages.',
               he: 'נפתרו נפילות שקטות של חבילות MQTT ע"י הגדלת חוצץ PubSubClient ל-8KB, קריאות client.loop() וניתוק יזום לפני שינה. הבקר מתעורר מדי שעה עם רדיו כבוי לפחות מ-10ms לשמירת דגימות ב-RTC_DATA_ATTR עם חותמת זמן NTP, ומשדר מרוכז כל 12 שעות אל שרת ThingsBoard עצמאי בענן — מה שחוסך עד 95% מאנרגיית ה-Wi-Fi ומונע אובדן מידע בניתוקי רשת.',
@@ -215,6 +257,18 @@ export const projectCards: Project[] = [
             },
           },
         ],
+      },
+      {
+        type: 'image',
+        title: {
+          en: '2-Layer PCB Layout (EasyEDA Pro)',
+          he: 'פריסת ה-PCB הדו-שכבתית (EasyEDA Pro)',
+        },
+        url: getMediaUrl('/images/smart-meter/PCBlayout.png'),
+        alt: {
+          en: 'Custom 2-layer EasyEDA Pro PCB layout with RF keepout zone and RC pulse filter',
+          he: 'פריסת ה-PCB הדו-שכבתית ב-EasyEDA Pro עם אזור RF Keepout ומסנן RC',
+        },
       },
       {
         type: 'specs',
@@ -284,44 +338,6 @@ export const projectCards: Project[] = [
             },
           },
         ],
-      },
-      {
-        type: 'code',
-        title: {
-          en: 'Core Firmware: RTC Batch Record & Adaptive Pulse ISR',
-          he: 'ליבת הקושחה: מבנה האגירה ב-RTC ופסיקת פולסים מותאמת',
-        },
-        description: {
-          en: 'Excerpt from src/main_c3.cpp showing persistent RTC telemetry structs and calibrated ISR debouncing',
-          he: 'קטע מקורי מתוך src/main_c3.cpp המציג את אגירת הרשומות בזיכרון ה-RTC ופסיקת החומרה המכוילת',
-        },
-        language: 'C++ / PlatformIO (ESP32-C3)',
-        code: `struct HourlyRecord
-{
-  uint32_t ts_epoch_sec; // Unix timestamp (seconds)
-  float total_kwh;       // Cumulative meter reading (kWh)
-  float avg_power_watts; // Average power in interval (W)
-  float battery_voltage; // Battery voltage sample (V)
-};
-
-RTC_DATA_ATTR volatile uint32_t pulse_count = 0;
-RTC_DATA_ATTR uint16_t pulses_per_kwh_rtc = 100;
-RTC_DATA_ATTR uint32_t debounce_time_ms = 80;
-RTC_DATA_ATTR HourlyRecord rtc_records[MAX_HOURLY_RECORDS];
-RTC_DATA_ATTR uint8_t rtc_records_count = 0;
-
-void IRAM_ATTR onPulse()
-{
-  if (!pulse_interrupt_enabled)
-    return;
-
-  uint32_t now = millis();
-  if (now - last_isr_millis > debounce_time_ms)
-  {
-    last_isr_millis = now;
-    pulse_count++;
-  }
-}`,
       },
       {
         type: 'features',
