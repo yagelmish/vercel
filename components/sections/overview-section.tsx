@@ -35,13 +35,13 @@ export function OverviewSection() {
         {siteContent.overview.highlights.map((item) => (
           <div
             key={getStableTextKey(item.label)}
-            className="rounded-xl border border-border bg-card/40 p-5 backdrop-blur-sm"
+            className="min-w-0 rounded-xl border border-border bg-card/40 p-5 backdrop-blur-sm"
           >
             <p className="font-mono text-xs ltr:tracking-widest rtl:tracking-normal text-muted-foreground">
               {t(item.label).toUpperCase()}
             </p>
-            <p className="mt-2 font-medium text-foreground">
-              <span dir={typeof item.value === 'string' ? 'ltr' : undefined} className="inline-block">
+            <p className="mt-2 font-medium text-foreground break-words">
+              <span dir={typeof item.value === 'string' ? 'ltr' : undefined} className="inline-block max-w-full break-words">
                 {t(item.value)}
               </span>
             </p>

@@ -23,8 +23,8 @@ export function ProjectDetail({ projectId, onBack }: { projectId: string; onBack
       case 'text':
         return (
           <section key={index} className="space-y-4">
-            {block.title && <h3 className="text-2xl font-semibold text-white">{t(block.title)}</h3>}
-            <p className="leading-relaxed text-slate-400 whitespace-pre-line">{t(block.content)}</p>
+            {block.title && <h3 className="text-xl sm:text-2xl font-semibold text-white break-words">{t(block.title)}</h3>}
+            <p className="leading-relaxed text-slate-400 whitespace-pre-line break-words">{t(block.content)}</p>
             {block.bullets && block.bullets.length > 0 && (
               <ul className="space-y-3 pt-1">
                 {block.bullets.map((bullet, i) => (
@@ -33,7 +33,7 @@ export function ProjectDetail({ projectId, onBack }: { projectId: string; onBack
                     className="flex items-start gap-3 rounded-xl border border-white/5 bg-white/[0.02] px-4 py-3 text-sm leading-relaxed text-slate-300"
                   >
                     <span className="mt-2 size-1.5 shrink-0 rounded-full bg-[#00f0ff] shadow-[0_0_8px_rgba(0,240,255,0.8)]" />
-                    <span>
+                    <span className="min-w-0 flex-1 break-words">
                       {bullet.title && (
                         <strong className="font-semibold text-white">{t(bullet.title)}: </strong>
                       )}
@@ -98,13 +98,13 @@ export function ProjectDetail({ projectId, onBack }: { projectId: string; onBack
             {block.title && <h3 className="text-2xl font-semibold text-white">{t(block.title)}</h3>}
             <div className="flex flex-col gap-4">
               {block.steps.map((step, i) => (
-                <div key={i} className="relative flex gap-5 rounded-xl border border-white/5 bg-white/[0.02] p-5">
+                <div key={i} className="relative flex gap-4 sm:gap-5 rounded-xl border border-white/5 bg-white/[0.02] p-4 sm:p-5">
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#00f0ff]/10 font-mono text-sm font-bold text-[#00f0ff]">
                     {String(i + 1).padStart(2, '0')}
                   </div>
-                  <div>
-                    <h4 className="font-medium text-white mb-2">{t(step.title)}</h4>
-                    <p className="text-sm text-slate-400 leading-relaxed">{t(step.description)}</p>
+                  <div className="min-w-0 flex-1">
+                    <h4 className="font-medium text-white mb-2 break-words">{t(step.title)}</h4>
+                    <p className="text-sm text-slate-400 leading-relaxed break-words">{t(step.description)}</p>
                   </div>
                 </div>
               ))}
@@ -128,15 +128,15 @@ export function ProjectDetail({ projectId, onBack }: { projectId: string; onBack
             </div>
             <div
               dir="ltr"
-              className="relative overflow-hidden rounded-xl border border-white/10 bg-[#070512] p-4 font-mono text-xs text-slate-300 shadow-inner text-left"
+              className="relative max-w-full overflow-hidden rounded-xl border border-white/10 bg-[#070512] p-4 font-mono text-xs text-slate-300 shadow-inner text-left"
             >
-              <div className="mb-3 flex items-center justify-between border-b border-white/5 pb-2 text-[11px] text-slate-500">
+              <div className="mb-3 flex flex-wrap items-center justify-between gap-2 border-b border-white/5 pb-2 text-[11px] text-slate-500">
                 <span>
                   {block.language} {t(siteContent.projectDetail.codeSnippetSuffix)}
                 </span>
                 <span className="text-[#00f0ff]">{block.language}</span>
               </div>
-              <pre className="overflow-x-auto whitespace-pre leading-relaxed">
+              <pre className="max-w-full overflow-x-auto whitespace-pre leading-relaxed">
                 <code>{block.code}</code>
               </pre>
             </div>
@@ -146,9 +146,9 @@ export function ProjectDetail({ projectId, onBack }: { projectId: string; onBack
       case 'specs':
         return (
           <section key={index} className="space-y-4">
-            {block.title && <h3 className="text-2xl font-semibold text-white">{t(block.title)}</h3>}
+            {block.title && <h3 className="text-xl sm:text-2xl font-semibold text-white break-words">{t(block.title)}</h3>}
             {block.description && (
-              <p className="leading-relaxed text-slate-400">{t(block.description)}</p>
+              <p className="leading-relaxed text-slate-400 break-words">{t(block.description)}</p>
             )}
             <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] shadow-lg">
               {block.rows.map((row, i) => (
@@ -156,10 +156,10 @@ export function ProjectDetail({ projectId, onBack }: { projectId: string; onBack
                   key={i}
                   className="grid gap-1.5 border-b border-white/5 px-5 py-3.5 text-sm last:border-b-0 sm:grid-cols-[210px_1fr] sm:items-baseline sm:gap-4"
                 >
-                  <span className="font-mono text-xs font-medium text-[#00f0ff]">
+                  <span className="min-w-0 font-mono text-xs font-medium text-[#00f0ff] break-words">
                     {t(row.label)}
                   </span>
-                  <span className="leading-relaxed text-slate-300">{t(row.value)}</span>
+                  <span className="min-w-0 leading-relaxed text-slate-300 break-words">{t(row.value)}</span>
                 </div>
               ))}
             </div>
@@ -174,31 +174,31 @@ export function ProjectDetail({ projectId, onBack }: { projectId: string; onBack
   const featuresBlock = project.contentBlocks.find((b) => b.type === 'features')
 
   return (
-    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out pb-20">
+    <div className="min-w-0 animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out pb-20">
       <button
         type="button"
         onClick={onBack}
-        className="mb-12 flex items-center gap-2 text-sm font-semibold ltr:tracking-wider rtl:tracking-normal text-[#00f0ff] transition-colors hover:text-white uppercase"
+        className="mb-10 sm:mb-12 flex items-center gap-2 text-sm font-semibold ltr:tracking-wider rtl:tracking-normal text-[#00f0ff] transition-colors hover:text-white uppercase"
       >
         <ArrowLeft className="size-4 rtl:rotate-180" /> {t(siteContent.projectDetail.backToIndex)}
       </button>
 
       {/* Header Section */}
-      <div className="mb-12">
+      <div className="mb-10 sm:mb-12">
         <div className="mb-4 text-xs font-semibold ltr:tracking-widest rtl:tracking-normal text-[#00f0ff] uppercase">
           {t(project.label)}
         </div>
-        <h1 className="mb-6 text-4xl font-bold leading-tight tracking-tight text-white lg:text-5xl">
+        <h1 className="mb-6 text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl break-words">
           {title}
         </h1>
-        <p className="mb-8 text-lg leading-relaxed text-slate-300 max-w-3xl">
+        <p className="mb-8 text-base sm:text-lg leading-relaxed text-slate-300 max-w-3xl break-words">
           {t(project.pageDescription || project.description)}
         </p>
-        <div className="flex flex-wrap gap-3">
+        <div className="flex flex-wrap gap-2.5 sm:gap-3">
           {project.tags.map((tag) => (
             <span
               key={getStableTextKey(tag)}
-              className="rounded-full border border-[#00f0ff]/40 bg-[#00f0ff]/10 px-4 py-1.5 text-xs font-semibold ltr:tracking-wider rtl:tracking-normal text-[#00f0ff] uppercase"
+              className="rounded-full border border-[#00f0ff]/40 bg-[#00f0ff]/10 px-3.5 py-1.5 text-xs font-semibold ltr:tracking-wider rtl:tracking-normal text-[#00f0ff] uppercase"
             >
               {t(tag)}
             </span>
@@ -208,7 +208,7 @@ export function ProjectDetail({ projectId, onBack }: { projectId: string; onBack
 
       {/* Hero Image */}
       {heroImageLoaded && (
-        <div className="relative mb-14 h-[420px] w-full overflow-hidden rounded-2xl border border-white/10 bg-[#0b0b0f] shadow-[0_0_50px_rgba(0,240,255,0.04)] flex items-center justify-center group">
+        <div className="relative mb-12 sm:mb-14 h-[240px] sm:h-[340px] lg:h-[420px] w-full overflow-hidden rounded-2xl border border-white/10 bg-[#0b0b0f] shadow-[0_0_50px_rgba(0,240,255,0.04)] flex items-center justify-center group">
           <img
             src={getMediaUrl(project.image || `/images/${project.id}/hero.png`)}
             alt={title}
@@ -219,8 +219,8 @@ export function ProjectDetail({ projectId, onBack }: { projectId: string; onBack
       )}
 
       {/* Dynamic Content Rendering */}
-      <div className="grid gap-10 lg:grid-cols-3 border-t border-white/10 pt-12">
-        <div className="lg:col-span-2 space-y-12">
+      <div className="grid gap-10 lg:grid-cols-3 border-t border-white/10 pt-10 sm:pt-12">
+        <div className="min-w-0 lg:col-span-2 space-y-12">
           {project.contentBlocks
             .filter((b) => b.type !== 'features')
             .map((block, index) => renderBlock(block, index))}
@@ -228,7 +228,7 @@ export function ProjectDetail({ projectId, onBack }: { projectId: string; onBack
 
         {/* Key Features Sidebar */}
         {featuresBlock && featuresBlock.type === 'features' && (
-          <div className="space-y-6 lg:ps-6">
+          <div className="min-w-0 space-y-6 lg:ps-6">
             <div className="sticky top-24 rounded-2xl border border-white/10 bg-white/[0.02] p-6 shadow-xl">
               <h4 className="mb-6 font-semibold text-white ltr:tracking-wide rtl:tracking-normal uppercase text-sm">
                 {t(featuresBlock.title || siteContent.projectDetail.defaultFeaturesTitle)}

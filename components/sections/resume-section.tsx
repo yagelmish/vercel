@@ -101,7 +101,7 @@ function ContactRow({
   )
 
   const className =
-    'flex items-center gap-3 rounded-xl border border-border bg-card/40 p-4 backdrop-blur-sm transition-colors'
+    'flex min-w-0 items-center gap-3 rounded-xl border border-border bg-card/40 p-4 backdrop-blur-sm transition-colors'
 
   const isExternal = href?.startsWith('http')
 

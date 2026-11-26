@@ -18,8 +18,8 @@ export default function Page() {
   const { t } = useLanguage()
 
   return (
-    <div className="relative flex min-h-screen overflow-hidden bg-[#030108]">
-      <div className="fixed inset-0 z-0">
+    <div className="relative flex min-h-screen overflow-x-clip bg-[#030108]">
+      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
         <div className="absolute inset-0 bg-gradient-to-br from-[#07051a] via-[#030108] to-[#0a061e]" />
         <div className="absolute -left-[20%] -top-[10%] h-[800px] w-[800px] rounded-full bg-purple-700/30 blur-[150px]" />
         <div className="absolute -bottom-[10%] -right-[10%] h-[800px] w-[800px] rounded-full bg-blue-700/30 blur-[150px]" />
@@ -62,7 +62,7 @@ export default function Page() {
           </span>
         </header>
 
-        <main className="flex-1 px-6 py-12 sm:px-10 sm:py-14 lg:px-14 lg:py-16 max-w-7xl mx-auto w-full">
+        <main className="min-w-0 flex-1 px-4 py-8 sm:px-10 sm:py-14 lg:px-14 lg:py-16 max-w-7xl mx-auto w-full">
           {active === 'overview' && <OverviewSection />}
           {active === 'projects' && <ProjectsGrid onSelectProject={setActive} />}
 

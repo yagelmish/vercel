@@ -30,7 +30,7 @@ export function ProjectsGrid({ onSelectProject }: { onSelectProject: (id: Sectio
               key={project.id}
               onClick={() => onSelectProject(project.id as SectionId)}
               style={{ animationDelay: `${i * 90}ms` }}
-              className="group relative flex animate-in flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] fade-in slide-in-from-bottom-4 fill-mode-both duration-500 ease-out transition-[transform,box-shadow] hover:-translate-y-1 hover:border-[#00f0ff]/30 hover:shadow-[0_0_25px_rgba(0,240,255,0.1)] cursor-pointer"
+              className="group relative flex min-w-0 animate-in flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] fade-in slide-in-from-bottom-4 fill-mode-both duration-500 ease-out transition-[transform,box-shadow] hover:-translate-y-1 hover:border-[#00f0ff]/30 hover:shadow-[0_0_25px_rgba(0,240,255,0.1)] cursor-pointer"
             >
               {/* Visual header */}
               <div className="relative aspect-[16/10] overflow-hidden border-b border-white/5 bg-[#0b0b0f]">
@@ -68,7 +68,7 @@ export function ProjectsGrid({ onSelectProject }: { onSelectProject: (id: Sectio
                   </div>
                   <span
                     dir="ltr"
-                    className="font-mono text-[11px] tracking-[0.3em] text-slate-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]"
+                    className="max-w-full px-3 text-center font-mono text-[11px] tracking-[0.16em] sm:tracking-[0.3em] text-slate-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]"
                   >
                     {project.glyph}
                   </span>
@@ -76,7 +76,7 @@ export function ProjectsGrid({ onSelectProject }: { onSelectProject: (id: Sectio
               </div>
 
               {/* Card body */}
-              <div className="flex flex-1 flex-col p-6">
+              <div className="flex min-w-0 flex-1 flex-col p-5 sm:p-6">
                 <div className="flex items-start justify-between gap-4">
                   <span className="font-mono text-[11px] font-medium uppercase ltr:tracking-[0.18em] rtl:tracking-normal text-[#00f0ff]">
                     {t(project.label)}
