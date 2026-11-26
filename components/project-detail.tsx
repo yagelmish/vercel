@@ -58,14 +58,13 @@ export function ProjectDetail({ projectId, onBack }: { projectId: string; onBack
             <div className="relative mx-auto aspect-[9/16] w-full max-w-[340px] overflow-hidden rounded-[2rem] border-[8px] border-white/5 bg-[#0b0b0f] shadow-[0_0_30px_rgba(0,240,255,0.08)]">
               {videoLoaded ? (
                 <video
+                  src={getMediaUrl(block.url)}
                   controls
                   playsInline
                   preload="metadata"
                   onError={() => setVideoLoaded(false)}
                   className="h-full w-full object-cover"
-                >
-                  <source src={getMediaUrl(block.url)} type="video/mp4" />
-                </video>
+                />
               ) : (
                 <div className="flex h-full w-full flex-col items-center justify-center gap-3 p-6 text-center">
                   <Play className="size-10 text-slate-600" />

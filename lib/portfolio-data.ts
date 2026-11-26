@@ -87,6 +87,11 @@ export const projectCards: Project[] = [
         },
       },
       {
+        type: 'video',
+        title: { en: 'Demo & Walkthrough', he: 'הדגמה והסבר' },
+        url: getMediaUrl('/clips/smart-meter/democlip.mov'),
+      },
+      {
         type: 'text',
         title: {
           en: 'Hurdle 1: Current Source (CT) vs. Voltage-Source MPPT (BQ25570)',
@@ -428,6 +433,14 @@ export const projectCards: Project[] = [
             },
           },
         ],
+      },
+      {
+        type: 'video',
+        title: {
+          en: 'Live Demo: Refrigerator Shabbat Mode Control',
+          he: 'הדגמה חיה: שליטה במצב שבת במקרר',
+        },
+        url: getMediaUrl('/clips/smart-home/demo.mp4'),
       },
       {
         type: 'steps',
