@@ -1,4 +1,4 @@
-import { Cpu, Code, Lock, Zap, type LucideIcon } from 'lucide-react'
+import { Cpu, Code, Lock, Zap, Home, type LucideIcon } from 'lucide-react'
 import type { LocalizableText, LocalizedString } from '@/lib/i18n'
 import { getMediaUrl } from '@/lib/media'
 
@@ -351,6 +351,195 @@ export const projectCards: Project[] = [
           { en: 'Custom 2-layer EasyEDA PCB with RF Keepout', he: 'PCB דו-שכבתי ייעודי ב-EasyEDA עם RF Keepout' },
           { en: '48h RTC batching to self-hosted ThingsBoard', he: 'אגירת RTC ל-48 שעות ושידור MQTTS ל-ThingsBoard' },
           { en: 'Captive Portal auto-calibration + UART sniffer', he: 'כיול פולס אוטומטי בפורטל + בקר Sniffer לדיבאג' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'smart-home',
+    category: 'hardware',
+    label: {
+      en: 'HOME AUTOMATION · IOT · ESP32',
+      he: 'בית חכם · IoT · ESP32',
+    },
+    title: {
+      en: 'Custom Smart Home System: Raspberry Pi & ESP32',
+      he: 'מערכת בית חכם מותאמת אישית: Raspberry Pi ו-ESP32',
+    },
+    description: {
+      en: 'DIY smart-home ecosystem built on a Raspberry Pi (HAOS) hub and ESP32-C3 nodes over MQTT. Retrofits legacy non-IoT appliances—live Shabbat automation for the refrigerator via Jewish Calendar with phone alerts, plus in-progress IR ceiling fan control.',
+      he: 'מערכת בית חכם עצמאית המבוססת על רכזת Raspberry Pi (HAOS) ובקרי ESP32-C3 בתקשורת MQTT. מחברת מכשירי חשמל רגילים לשליטה חכמה, אוטומציית שבת מבוססת Jewish Calendar והתראות לטלפון — כולל מקרר מחובר ושליטת IR למאוורר תקרה בפיתוח.',
+    },
+    pageDescription: {
+      en: 'A custom smart-home platform centered around a Raspberry Pi running Home Assistant OS (HAOS) and compact ESP32-C3 controllers. It brings unified control, mobile notifications, and automated Jewish Calendar Shabbat scheduling to everyday appliances that lack built-in IoT support.',
+      he: 'מערכת בית חכם מותאמת אישית שבמרכזה רכזת Raspberry Pi עם Home Assistant OS (HAOS) ובקרי ESP32-C3 זעירים. הפרויקט מחבר מכשירי חשמל ביתיים שאינם תומכים ב-IoT מהמפעל לשליטה מרוכזת, התראות לטלפון ואוטומציית מצב שבת אוטומטית.',
+    },
+    tags: [
+      'RASPBERRY PI (HAOS)',
+      'HOME ASSISTANT',
+      'ESP32-C3',
+      'MQTT AUTO-DISCOVERY',
+      'OTA / IR',
+    ],
+    icon: Home,
+    glyph: 'HAOS · ESP32-C3 · MQTT',
+    image: getMediaUrl('/images/smart-home/hero.png'),
+    contentBlocks: [
+      {
+        type: 'text',
+        title: {
+          en: 'The Need: Smart Control & Shabbat Automation for Legacy Appliances',
+          he: 'הצורך: הפיכת מכשירי חשמל רגילים לחכמים ואוטומציית שבת',
+        },
+        content: {
+          en: 'Most standard household appliances—refrigerators, water dispensers, ceiling fans, and washing machines—ship without native IoT connectivity or automated Shabbat-mode scheduling. Replacing working appliances with smart models is expensive and unnecessary.\n\nThe goal of this project is to retrofit existing non-IoT appliances with tiny, low-cost ESP32-C3 controllers managed from a single local hub on a Raspberry Pi, enabling automated Jewish Calendar Shabbat transitions, remote control, and mobile alerts without changing how the appliances work day-to-day.',
+          he: 'רוב מכשירי החשמל הביתיים — מקררים, ברי מים, מאווררי תקרה ומכונות כביסה — מגיעים מהמפעל ללא תמיכה ב-IoT או באוטומציית מצב שבת, והחלפת מכשירים תקינים בדגמים חכמים יקרה ומיותרת.\n\nמטרת הפרויקט היא לחבר את המכשירים הקיימים באמצעות בקרי ESP32-C3 זעירים וזולים המנוהלים מרכזת ביתית מקומית על גבי Raspberry Pi — כדי לאפשר מעבר אוטומטי למצב שבת לפי לוח השנה העברי, שליטה מרחוק והתראות לטלפון.',
+        },
+      },
+      {
+        type: 'text',
+        title: {
+          en: 'Hub & Firmware Architecture: HAOS, MQTT Auto-Discovery & OTA',
+          he: 'ארכיטקטורת הרכזת והקושחה: HAOS, גילוי אוטומטי ו-OTA',
+        },
+        content: {
+          en: 'A Raspberry Pi running Home Assistant OS (HAOS) serves as the local brain and MQTT broker—firing Jewish Calendar automations around candle-lighting and Havdalah and pushing status notifications directly to the phone. On the edge, all controllers share a unified PlatformIO codebase (common/config.h and common/ota.h) built around two core capabilities:',
+          he: 'המוח המרכזי הוא Raspberry Pi המריץ Home Assistant OS (HAOS) ושרת MQTT מקומי, המפעיל אוטומציות דרך אינטגרציית Jewish Calendar ושולח התראות Push לטלפון. בצד הקצה, כל הבקרים חולקים תשתית PlatformIO משותפת (common/config.h ו-common/ota.h) המבוססת על שני עקרונות:',
+        },
+        bullets: [
+          {
+            title: {
+              en: 'MQTT Auto-Discovery & Availability (LWT)',
+              he: 'גילוי אוטומטי ב-Home Assistant וניטור זמינות (LWT)',
+            },
+            text: {
+              en: 'Each ESP32-C3 node publishes JSON discovery payloads (homeassistant/.../config) on connection so switches, fans, lights, buttons, and sensors register automatically inside Home Assistant with Last-Will online/offline tracking.',
+              he: 'כל בקר משדר עם ההתחברות הגדרות JSON בפורמט Auto-Discovery של Home Assistant, כך שהמתגים, המאוורר, התאורה והחיישנים מופיעים אוטומטית במערכת כולל חיווי זמינות (Online/Offline).',
+            },
+          },
+          {
+            title: {
+              en: 'Wireless OTA Firmware Updates',
+              he: 'עדכוני קושחה אלחוטיים (OTA)',
+            },
+            text: {
+              en: 'Configured with min_spiffs.csv (1.9 MB app partition) and ArduinoOTA, allowing firmware upgrades over Wi-Fi without opening appliance enclosures or reconnecting USB cables.',
+              he: 'מחיצות הזיכרון (min_spiffs.csv) ומימוש ArduinoOTA מאפשרים צריבת גרסאות חדשות דרך ה-Wi-Fi, בלי לפרק את הבקרים מתוך מכשירי החשמל.',
+            },
+          },
+        ],
+      },
+      {
+        type: 'steps',
+        title: {
+          en: 'Connected Devices & Development Stages',
+          he: 'הבקרים במערכת ושלבי הפיתוח',
+        },
+        steps: [
+          {
+            title: {
+              en: 'Refrigerator Shabbat Controller — Live & Connected (kitchen_controller)',
+              he: 'בקר מקרר למצב שבת — מחובר ופועל (kitchen_controller)',
+            },
+            description: {
+              en: 'Connected in series to the refrigerator’s door-switch circuit through a galvanically isolated optocoupler on GPIO 5 (HIGH conducts on weekdays; LOW disconnects the circuit for Shabbat so opening the door does not trigger lights/electronics). The unified firmware also integrates non-blocking 5.5 s parallel button-press logic (GPIO 4) for a water dispenser synced on the shared smartHome/shabbat/set channel.',
+              he: 'מחובר בטור למעגל מפסק הדלת של המקרר דרך אופטוקופלר לבידוד גלווני על GPIO 5 (מוציא HIGH ביום חול ומנתק את המעגל ב-LOW במצב שבת כדי שפתיחת הדלת לא תפעיל נורה/חיווי). הקושחה המאוחדת כוללת גם שליטה לבר מים (לחיצה מקבילית לא-חוסמת של 5.5 שניות ב-GPIO 4) המסונכרנת בערוץ שבת משותף.',
+            },
+          },
+          {
+            title: {
+              en: 'Ceiling Fan IR Bridge — Currently in Development (ceiling_fan)',
+              he: 'בקר מאוורר תקרה באינפרא-אדום — בפיתוח פעיל (ceiling_fan)',
+            },
+            description: {
+              en: 'Emulates the ceiling fan’s original infrared remote using an IR transmitter LED on GPIO 3 alongside a VS1838B IR receiver on GPIO 2 in continuous learning mode (IRremote). Incoming remote presses are decoded and printed as ready-to-paste IRCode structs over Serial, exposing 3-speed fan control (off/low/medium/high) and smart Toggle light synchronization to Home Assistant.',
+              he: 'מחקה את שידורי שלט ה-IR המקורי של מאוורר התקרה באמצעות דיודת שידור IR ב-GPIO 3 ומקלט VS1838B ב-GPIO 2 במצב למידה רציף (IRremote). לחיצות מהשלט המקורי מפוענחות ומודפסות להעתקה ישירה לקוד, וחושפות ל-Home Assistant שליטה ב-3 מהירויות ובמצב התאורה (כולל לחצן היפוך לסנכרון).',
+            },
+          },
+          {
+            title: {
+              en: 'Jewish Calendar Automations & Mobile Alerts (HAOS)',
+              he: 'אוטומציות Jewish Calendar והתראות לטלפון (HAOS)',
+            },
+            description: {
+              en: 'Home Assistant on the Raspberry Pi uses the Jewish Calendar integration to trigger Shabbat entry and exit commands automatically over MQTT and send push notifications to the phone confirming appliance status changes.',
+              he: 'מערכת Home Assistant על ה-Raspberry Pi משתמשת באינטגרציית Jewish Calendar כדי להפעיל ולכבות מצב שבת אוטומטית לפני כניסת שבת ובצאתה דרך MQTT, ולשלוח התראות אישור לטלפון הנייד.',
+            },
+          },
+          {
+            title: {
+              en: 'Washing Machine Cycle Monitor — Firmware Scaffold (washing_machine)',
+              he: 'בקר מכונת כביסה — תשתית קושחה מוכנה (washing_machine)',
+            },
+            description: {
+              en: 'Prepared a dedicated state-machine controller (IDLE → RUNNING → FINISHED) with 10 s startup debounce, 90 s quiet completion detection, and a Home Assistant binary_sensor for cycle-done phone alerts—abstracted behind isSensorDetectingActivity() for future vibration, CT current, or I2C accelerometer attachment.',
+              he: 'הוכנה קושחת מכונת מצבים (IDLE → RUNNING → FINISHED) עם סינון תחילת עבודה (10 שניות), זיהוי סיום לאחר 90 שניות שקט, וחיישן בינארי להתראות סיום כביסה — עם שכבת חומרה גמישה (isSensorDetectingActivity) לחיבור עתידי של חיישן רטט, זרם או תאוצה.',
+            },
+          },
+        ],
+      },
+      {
+        type: 'specs',
+        title: {
+          en: 'System Architecture Summary',
+          he: 'סיכום ארכיטקטורה ורכיבים',
+        },
+        rows: [
+          {
+            label: { en: 'Central Hub', he: 'רכזת ביתית' },
+            value: {
+              en: 'Raspberry Pi running Home Assistant OS (HAOS) + Mosquitto MQTT Broker',
+              he: 'Raspberry Pi עם מערכת Home Assistant OS (HAOS) ושרת MQTT מקומי',
+            },
+          },
+          {
+            label: { en: 'Edge Controllers', he: 'בקרי קצה' },
+            value: {
+              en: 'ESP32-C3 SuperMini nodes built with multi-environment PlatformIO (Arduino framework)',
+              he: 'בקרי ESP32-C3 SuperMini המנוהלים בפרויקט PlatformIO רב-סביבתי',
+            },
+          },
+          {
+            label: { en: 'Live Connected Device', he: 'מכשיר מחובר ופועל' },
+            value: {
+              en: 'Refrigerator Shabbat controller via isolated optocoupler (GPIO 5) synced with HAOS',
+              he: 'בקר מקרר למצב שבת דרך אופטוקופלר מבודד (GPIO 5) מסונכרן מול HAOS',
+            },
+          },
+          {
+            label: { en: 'In-Progress Node', he: 'בקר בפיתוח נוכחי' },
+            value: {
+              en: 'Ceiling fan IR emulator (GPIO 3 TX + GPIO 2 VS1838B RX, IRremote library)',
+              he: 'בקר חיקוי שלט IR למאוורר תקרה (GPIO 3 שידור + GPIO 2 קליטה, ספריית IRremote)',
+            },
+          },
+          {
+            label: { en: 'Automations & Alerts', he: 'אוטומציות והתראות' },
+            value: {
+              en: 'Home Assistant Jewish Calendar integration + mobile push notifications',
+              he: 'אינטגרציית Jewish Calendar לשבת/חג + התראות Push לטלפון הנייד',
+            },
+          },
+          {
+            label: { en: 'Communication & Updates', he: 'תקשורת ועדכונים' },
+            value: {
+              en: 'Local Wi-Fi + MQTT Auto-Discovery (ArduinoJson) + wireless ArduinoOTA',
+              he: 'Wi-Fi מקומי + MQTT Auto-Discovery (ArduinoJson) + צריבה אלחוטית ArduinoOTA',
+            },
+          },
+        ],
+      },
+      {
+        type: 'features',
+        title: { en: 'Key Features', he: 'מאפיינים מרכזיים' },
+        features: [
+          { en: 'Raspberry Pi HAOS hub with local MQTT', he: 'רכזת Raspberry Pi עם HAOS ו־MQTT מקומי' },
+          { en: 'Jewish Calendar Shabbat automations + alerts', he: 'אוטומציות Jewish Calendar והתראות לטלפון' },
+          { en: 'Live optocoupler-isolated fridge controller', he: 'בקר מקרר פעיל ומבודד באופטוקופלר' },
+          { en: 'Ceiling fan IR remote cloning (in progress)', he: 'חיקוי שלט IR למאוורר תקרה (בפיתוח)' },
+          { en: 'MQTT Auto-Discovery & LWT device status', he: 'גילוי ישויות אוטומטי ב-HA וניטור זמינות LWT' },
+          { en: 'Wireless ArduinoOTA firmware updates', he: 'עדכוני קושחה אלחוטיים (ArduinoOTA)' },
+          { en: 'Unified multi-node PlatformIO codebase', he: 'קוד בסיס אחיד ורב-סביבתי ב-PlatformIO' },
         ],
       },
     ],
