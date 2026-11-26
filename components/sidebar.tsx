@@ -143,16 +143,18 @@ export function Sidebar({ active, onSelect, onCloseMobile }: NavProps) {
                 onSelectProject={handleSelect}
               />
 
-              <CategoryGroup
-                title={t(siteContent.sidebar.categories.learning)}
-                icon={BookOpen}
-                isOpen={openCategories.learning}
-                onToggle={() => toggleCategory('learning')}
-                items={learningProjects}
-                activeId={active}
-                emptyLabel={t(siteContent.sidebar.noProjects)}
-                onSelectProject={handleSelect}
-              />
+              {learningProjects.length > 0 && (
+                <CategoryGroup
+                  title={t(siteContent.sidebar.categories.learning)}
+                  icon={BookOpen}
+                  isOpen={openCategories.learning}
+                  onToggle={() => toggleCategory('learning')}
+                  items={learningProjects}
+                  activeId={active}
+                  emptyLabel={t(siteContent.sidebar.noProjects)}
+                  onSelectProject={handleSelect}
+                />
+              )}
             </div>
           </div>
         </div>
