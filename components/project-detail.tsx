@@ -80,13 +80,17 @@ export function ProjectDetail({ projectId, onBack }: { projectId: string; onBack
 
       case 'image':
         return (
-          <section key={index} className="space-y-4">
-            {block.title && <h3 className="text-xl sm:text-2xl font-semibold text-white break-words">{t(block.title)}</h3>}
-            <div className="relative w-full overflow-hidden rounded-2xl border border-white/10 bg-[#0b0b0f] shadow-[0_0_30px_rgba(0,240,255,0.04)]">
+          <section key={index} className="space-y-3">
+            {block.title && (
+              <h3 className="text-lg sm:text-xl font-semibold text-white break-words">
+                {t(block.title)}
+              </h3>
+            )}
+            <div className="w-fit max-w-full overflow-hidden rounded-xl border border-white/10 bg-[#0b0b0f] shadow-[0_0_25px_rgba(0,240,255,0.04)]">
               <img
                 src={getMediaUrl(block.url)}
                 alt={block.alt ? t(block.alt) : block.title ? t(block.title) : title}
-                className="w-full h-auto object-contain"
+                className="block max-h-[260px] sm:max-h-[320px] w-auto max-w-full object-contain"
               />
             </div>
           </section>

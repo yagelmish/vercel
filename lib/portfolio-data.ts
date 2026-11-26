@@ -62,7 +62,7 @@ export const projectCards: Project[] = [
     ],
     icon: Zap,
     glyph: 'SCT-013 · BQ25570 · ESP32-C3',
-    image: getMediaUrl('/images/smartec/hero.png'),
+    image: getMediaUrl('/images/smart-meter/%D7%94%D7%93%D7%9E%D7%99%D7%94.jpg'),
     contentBlocks: [
       {
         type: 'text',
