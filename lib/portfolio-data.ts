@@ -89,7 +89,7 @@ export const projectCards: Project[] = [
       {
         type: 'video',
         title: { en: 'Demo & Walkthrough', he: 'הדגמה והסבר' },
-        url: getMediaUrl('/clips/smart-meter/democlip.mov'),
+        url: getMediaUrl('/clips/smart-meter/final.mp4'),
       },
       {
         type: 'text',
